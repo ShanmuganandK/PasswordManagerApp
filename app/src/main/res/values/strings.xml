@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Password Manager</string>
+    <string name="welcome_message">Welcome to Password Manager</string>
+    <string name="add_password">Add Password</string>
+    <string name="password_list">Password List</string>
+    <string name="credit_card">Credit Card</string>
+    <string name="expiry_notification">Your password is about to expire!</string>
+    <string name="generate_password">Generate Password</string>
+    <string name="context_specific_storage">Context-Specific Storage</string>
+    <string name="enter_password_details">Enter Password Details</string>
+    <string name="enter_credit_card_details">Enter Credit Card Details</string>
+    <string name="front_image">Front Image</string>
+    <string name="back_image">Back Image</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="no_passwords">No passwords stored.</string>
+</resources>

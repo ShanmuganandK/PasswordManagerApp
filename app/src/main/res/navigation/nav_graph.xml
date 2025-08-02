@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/passwordListFragment">
+
+    <fragment
+        android:id="@+id/passwordListFragment"
+        android:name="com.example.passwordmanager.ui.PasswordListFragment"
+        android:label="Passwords">
+        
+        <action
+            android:id="@+id/action_passwordListFragment_to_addPasswordFragment"
+            app:destination="@id/addPasswordFragment" />
+            
+        <action
+            android:id="@+id/action_passwordListFragment_to_creditCardListFragment"
+            app:destination="@id/creditCardListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addPasswordFragment"
+        android:name="com.example.passwordmanager.ui.AddPasswordFragment"
+        android:label="Add Password" />
+
+    <fragment
+        android:id="@+id/creditCardListFragment"
+        android:name="com.example.passwordmanager.ui.CreditCardListFragment"
+        android:label="Credit Cards">
+        
+        <action
+            android:id="@+id/action_creditCardListFragment_to_creditCardFragment"
+            app:destination="@id/creditCardFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/creditCardFragment"
+        android:name="com.example.passwordmanager.ui.CreditCardFragment"
+        android:label="Add Credit Card" />
+
+</navigation> 

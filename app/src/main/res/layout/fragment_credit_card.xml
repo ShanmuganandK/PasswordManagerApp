@@ -1,0 +1,62 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Credit Card Information"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/et_card_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Card Number"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/et_card_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Card Holder Name" />
+
+    <EditText
+        android:id="@+id/et_expiry_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Expiry Date (MM/YY)" />
+
+    <EditText
+        android:id="@+id/et_cvv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="CVV"
+        android:inputType="numberPassword" />
+
+    <Button
+        android:id="@+id/btn_upload_front"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload Front Image"
+        android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/btn_upload_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload Back Image"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/btn_save_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Credit Card"
+        android:layout_marginTop="16dp"/>
+
+</LinearLayout>
