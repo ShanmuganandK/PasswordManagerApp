@@ -13,6 +13,7 @@ import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 import java.util.UUID
+import java.security.MessageDigest
 
 class PasswordRepository(context: Context) {
 
@@ -176,4 +177,53 @@ class PasswordRepository(context: Context) {
     }
 
     // Additional methods for context-specific storage and expiry notifications can be added here
+
+    // Master Password Management
+    fun isMasterPasswordSet(): Boolean {
+        return sharedPreferences.getString("master_password_hash", null) != null
+    }
+
+    fun setMasterPassword(password: String, isPin: Boolean): Boolean {
+        return try {
+            val hash = hashPassword(password)
+            sharedPreferences.edit()
+                .putString("master_password_hash", hash)
+                .putBoolean("master_password_is_pin", isPin)
+                .apply()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    fun verifyMasterPassword(password: String): Boolean {
+        val storedHash = sharedPreferences.getString("master_password_hash", null) ?: return false
+        val inputHash = hashPassword(password)
+        return storedHash == inputHash
+    }
+
+    fun changeMasterPassword(oldPassword: String, newPassword: String, isPin: Boolean): Boolean {
+        if (!verifyMasterPassword(oldPassword)) {
+            return false
+        }
+        return setMasterPassword(newPassword, isPin)
+    }
+
+    fun clearMasterPassword(): Boolean {
+        return try {
+            sharedPreferences.edit()
+                .remove("master_password_hash")
+                .remove("master_password_is_pin")
+                .apply()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    private fun hashPassword(password: String): String {
+        val digest = MessageDigest.getInstance("SHA-256")
+        val hash = digest.digest(password.toByteArray())
+        return hash.joinToString("") { "%02x".format(it) }
+    }
 }

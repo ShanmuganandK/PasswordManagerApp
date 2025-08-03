@@ -14,6 +14,8 @@ import com.example.passwordmanager.R
 import com.example.passwordmanager.databinding.FragmentPasswordListBinding
 import com.example.passwordmanager.data.PasswordRepository
 import com.example.passwordmanager.model.PasswordEntry
+import com.example.passwordmanager.util.CardColorUtil
+import com.example.passwordmanager.util.StackedCardDecoration
 
 class PasswordListFragment : Fragment() {
 
@@ -34,7 +36,16 @@ class PasswordListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
+        // Detect dark theme
+        val isDarkTheme = (resources.configuration.uiMode and 
+            android.content.res.Configuration.UI_MODE_NIGHT_MASK) == 
+            android.content.res.Configuration.UI_MODE_NIGHT_YES
+        
+        val stackedDecoration = StackedCardDecoration()
+        stackedDecoration.setDarkTheme(isDarkTheme)
+        
         binding.passwordRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.passwordRecyclerView.addItemDecoration(stackedDecoration)
         loadPasswords()
         
         // Set up navigation buttons
@@ -64,7 +75,19 @@ class PasswordListFragment : Fragment() {
 
         override fun onBindViewHolder(holder: PasswordViewHolder, position: Int) {
             val passwordEntry = passwords[position]
-            holder.bind(passwordEntry)
+            holder.bind(passwordEntry, position)
+            
+            // Add stacked card animation with progressive offset
+            holder.itemView.alpha = 0f
+            holder.itemView.translationY = 50f
+            holder.itemView.translationX = (position * 4).toFloat() // Slight horizontal offset for stack effect
+            
+            holder.itemView.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(400)
+                .setStartDelay(position * 80L)
+                .start()
         }
 
         override fun getItemCount(): Int = passwords.size
@@ -76,11 +99,30 @@ class PasswordListFragment : Fragment() {
             private val expiryText: TextView = itemView.findViewById(R.id.expiry_text)
             private val notesText: TextView = itemView.findViewById(R.id.notes_text)
             private val togglePasswordButton: ImageButton = itemView.findViewById(R.id.btn_toggle_password)
+            private val cardContent: android.view.View = itemView.findViewById(R.id.card_content)
             
             private var isPasswordVisible = false
             private var currentPassword = ""
 
-            fun bind(passwordEntry: PasswordEntry) {
+            fun bind(passwordEntry: PasswordEntry, position: Int) {
+                // Apply glassy card color based on position
+                val baseColor = CardColorUtil.getCardColor(itemView.context, position)
+                val glassyColor = CardColorUtil.getGlassyColor(baseColor, 0.9f)
+                val textColor = CardColorUtil.getTextColorForBackground(baseColor)
+                
+                // Set card background color with glassy effect
+                cardContent.setBackgroundColor(glassyColor)
+                
+                // Set text colors
+                titleText.setTextColor(textColor)
+                usernameText.setTextColor(textColor)
+                passwordText.setTextColor(textColor)
+                expiryText.setTextColor(textColor)
+                notesText.setTextColor(textColor)
+                
+                // Set toggle button tint
+                togglePasswordButton.setColorFilter(textColor)
+                
                 titleText.text = passwordEntry.context
                 usernameText.text = if (passwordEntry.username.isNotEmpty()) "Username: ${passwordEntry.username}" else "Username: (not stored)"
                 

@@ -1,0 +1,34 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Background gradient -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M0,0h108v108h-108z"/>
+    
+    <!-- Subtle security pattern -->
+    <path
+        android:fillColor="#F5F5F5"
+        android:pathData="M0,0h108v108h-108z"
+        android:alpha="0.1"/>
+    
+    <!-- Corner accent -->
+    <path
+        android:fillColor="#E3F2FD"
+        android:pathData="M0,0L30,0L0,30Z"/>
+    
+    <path
+        android:fillColor="#E3F2FD"
+        android:pathData="M78,0L108,0L108,30Z"/>
+    
+    <path
+        android:fillColor="#E3F2FD"
+        android:pathData="M0,78L30,108L0,108Z"/>
+    
+    <path
+        android:fillColor="#E3F2FD"
+        android:pathData="M78,108L108,108L108,78Z"/>
+</vector> 

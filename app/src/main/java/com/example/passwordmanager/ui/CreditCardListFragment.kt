@@ -13,6 +13,8 @@ import com.example.passwordmanager.R
 import com.example.passwordmanager.databinding.FragmentCreditCardListBinding
 import com.example.passwordmanager.data.PasswordRepository
 import com.example.passwordmanager.model.CreditCardEntry
+import com.example.passwordmanager.util.CardColorUtil
+import com.example.passwordmanager.util.StackedCardDecoration
 
 class CreditCardListFragment : Fragment() {
 
@@ -33,7 +35,16 @@ class CreditCardListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
+        // Detect dark theme
+        val isDarkTheme = (resources.configuration.uiMode and 
+            android.content.res.Configuration.UI_MODE_NIGHT_MASK) == 
+            android.content.res.Configuration.UI_MODE_NIGHT_YES
+        
+        val stackedDecoration = StackedCardDecoration()
+        stackedDecoration.setDarkTheme(isDarkTheme)
+        
         binding.creditCardRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.creditCardRecyclerView.addItemDecoration(stackedDecoration)
         loadCreditCards()
         
         // Set up navigation buttons
@@ -63,7 +74,19 @@ class CreditCardListFragment : Fragment() {
 
         override fun onBindViewHolder(holder: CreditCardViewHolder, position: Int) {
             val creditCardEntry = creditCards[position]
-            holder.bind(creditCardEntry)
+            holder.bind(creditCardEntry, position)
+            
+            // Add stacked card animation with progressive offset
+            holder.itemView.alpha = 0f
+            holder.itemView.translationY = 50f
+            holder.itemView.translationX = (position * 4).toFloat() // Slight horizontal offset for stack effect
+            
+            holder.itemView.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(400)
+                .setStartDelay(position * 80L)
+                .start()
         }
 
         override fun getItemCount(): Int = creditCards.size
@@ -75,8 +98,25 @@ class CreditCardListFragment : Fragment() {
             private val bankNameText: TextView = itemView.findViewById(R.id.bank_name_text)
             private val expiryDateText: TextView = itemView.findViewById(R.id.expiry_date_text)
             private val notesText: TextView = itemView.findViewById(R.id.notes_text)
+            private val cardContent: android.view.View = itemView.findViewById(R.id.card_content)
 
-            fun bind(creditCardEntry: CreditCardEntry) {
+            fun bind(creditCardEntry: CreditCardEntry, position: Int) {
+                // Apply glassy card color based on position
+                val baseColor = CardColorUtil.getCardColor(itemView.context, position)
+                val glassyColor = CardColorUtil.getGlassyColor(baseColor, 0.9f)
+                val textColor = CardColorUtil.getTextColorForBackground(baseColor)
+                
+                // Set card background color with glassy effect
+                cardContent.setBackgroundColor(glassyColor)
+                
+                // Set text colors
+                cardHolderText.setTextColor(textColor)
+                cardNumberText.setTextColor(textColor)
+                cardTypeText.setTextColor(textColor)
+                bankNameText.setTextColor(textColor)
+                expiryDateText.setTextColor(textColor)
+                notesText.setTextColor(textColor)
+                
                 cardHolderText.text = "Card Holder: ${creditCardEntry.cardHolder}"
                 cardNumberText.text = "Card Number: ${maskCardNumber(creditCardEntry.cardNumber)}"
                 cardTypeText.text = if (creditCardEntry.cardType.isNotEmpty()) "Type: ${creditCardEntry.cardType}" else ""

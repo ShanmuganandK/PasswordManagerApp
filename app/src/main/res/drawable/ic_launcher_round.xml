@@ -1,0 +1,54 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Round background -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,0A54,54 0,1 1,54 108A54,54 0,1 1,54 0Z"/>
+    
+    <!-- Subtle security pattern -->
+    <path
+        android:fillColor="#F5F5F5"
+        android:pathData="M54,0A54,54 0,1 1,54 108A54,54 0,1 1,54 0Z"
+        android:alpha="0.1"/>
+    
+    <!-- Shield background -->
+    <path
+        android:fillColor="#2196F3"
+        android:pathData="M54,25C54,25 35,33 35,45V58C35,70 44,78 54,82C64,78 73,70 73,58V45C73,33 54,25 54,25Z"/>
+    
+    <!-- Shield highlight -->
+    <path
+        android:fillColor="#1976D2"
+        android:pathData="M54,25C54,25 35,33 35,45V58C35,70 44,78 54,82C64,78 73,70 73,58V45C73,33 54,25 54,25Z"
+        android:alpha="0.3"/>
+    
+    <!-- Lock body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M47,52V48C47,44 50,41 54,41C58,41 61,44 61,48V52H47Z"/>
+    
+    <!-- Lock shackle -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M51,52H57V56C57,58.2 55.2,60 53,60C50.8,60 49,58.2 49,56V52Z"/>
+    
+    <!-- Keyhole -->
+    <path
+        android:fillColor="#2196F3"
+        android:pathData="M53,54C54.1,54 55,54.9 55,56C55,57.1 54.1,58 53,58C51.9,58 51,57.1 51,56C51,54.9 51.9,54 53,54Z"/>
+    
+    <!-- Security checkmark -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M53,65L56,68L50,68L53,65Z"/>
+    
+    <!-- Shield border -->
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M54,25C54,25 35,33 35,45V58C35,70 44,78 54,82C64,78 73,70 73,58V45C73,33 54,25 54,25Z"
+        android:alpha="0.1"/>
+</vector> 
