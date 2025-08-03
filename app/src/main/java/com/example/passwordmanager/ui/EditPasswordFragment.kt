@@ -20,6 +20,10 @@ class EditPasswordFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var passwordRepository: PasswordRepository
     private lateinit var passwordEntry: PasswordEntry
+    private val currentYear = LocalDate.now().year
+    private val currentMonth = LocalDate.now().monthValue // 1-based index, but we need to account for "No Expiry"
+    private val allMonths = arrayOf("No Expiry", "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,15 +56,7 @@ class EditPasswordFragment : Fragment() {
     }
 
     private fun setupExpiryDateSpinners() {
-        // Setup month spinner
-        val months = arrayOf("No Expiry", "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December")
-        val monthAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, months)
-        monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerMonth.adapter = monthAdapter
-
         // Setup year spinner (current year to 20 years from now)
-        val currentYear = LocalDate.now().year
         val years = mutableListOf<String>()
         years.add("No Expiry")
         for (i in 0..20) {
@@ -69,13 +65,84 @@ class EditPasswordFragment : Fragment() {
         val yearAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, years)
         yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerYear.adapter = yearAdapter
+
+        // Create dynamic month adapter
+        val monthAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, allMonths)
+        monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerMonth.adapter = monthAdapter
+
+        // Add listener to year spinner to dynamically filter months
+        setupYearSpinnerListener()
+    }
+
+    private fun setupYearSpinnerListener() {
+        val years = mutableListOf<String>()
+        years.add("No Expiry")
+        for (i in 0..20) {
+            years.add((currentYear + i).toString())
+        }
+        
+        binding.spinnerYear.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
+                // Get the current month name before changing the adapter
+                val currentMonthName = binding.spinnerMonth.selectedItem?.toString()
+                
+                if (position == 0) {
+                    // "No Expiry" selected, set month to "No Expiry"
+                    binding.spinnerMonth.setSelection(0)
+                } else {
+                    val selectedYear = years[position].toInt()
+                    if (selectedYear == currentYear) {
+                        // For current year, show only months from current month onwards (including "No Expiry")
+                        val validMonths = arrayOf("No Expiry") + allMonths.slice(currentMonth until allMonths.size).drop(1).toTypedArray()
+                        val newMonthAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, validMonths)
+                        newMonthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        binding.spinnerMonth.adapter = newMonthAdapter
+                        
+                        // Try to preserve the current selection if it's valid for current year
+                        if (currentMonthName != null && validMonths.contains(currentMonthName)) {
+                            val preservedIndex = validMonths.indexOf(currentMonthName)
+                            binding.spinnerMonth.setSelection(preservedIndex)
+                        } else {
+                            // Set to current month (which is now at index 1, after "No Expiry")
+                            binding.spinnerMonth.setSelection(1)
+                        }
+                    } else {
+                        // For future years, show all months
+                        val newMonthAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, allMonths)
+                        newMonthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        binding.spinnerMonth.adapter = newMonthAdapter
+                        
+                        // Try to preserve the current selection
+                        if (currentMonthName != null && allMonths.contains(currentMonthName)) {
+                            val preservedIndex = allMonths.indexOf(currentMonthName)
+                            binding.spinnerMonth.setSelection(preservedIndex)
+                        } else {
+                            // Set to "No Expiry" for future years
+                            binding.spinnerMonth.setSelection(0)
+                        }
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
+        }
     }
 
     private fun loadPasswordData() {
         binding.etContext.setText(passwordEntry.context)
         binding.etUsername.setText(passwordEntry.username)
         binding.etPassword.setText(passwordEntry.password)
+        
+        // Temporarily disable the year spinner listener
+        binding.spinnerYear.onItemSelectedListener = null
+        
         setExpiryDateInSpinners(passwordEntry.expiryDate)
+        
+        // Re-enable the year spinner listener
+        setupYearSpinnerListener()
+        
+        binding.etNotes.setText(passwordEntry.notes)
     }
 
     private fun setExpiryDateInSpinners(expiryDate: String) {
@@ -90,17 +157,18 @@ class EditPasswordFragment : Fragment() {
             val monthName = date.month.getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH)
             val year = date.year.toString()
 
-            val months = arrayOf("No Expiry", "January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December")
-            val monthIndex = months.indexOf(monthName)
-            if (monthIndex != -1) {
-                binding.spinnerMonth.setSelection(monthIndex)
-            }
-
-            val currentYear = LocalDate.now().year
+            // Set year first
             val yearIndex = year.toInt() - currentYear + 1 // +1 because "No Expiry" is at index 0
             if (yearIndex >= 0 && yearIndex <= 21) { // 0-20 years + "No Expiry"
                 binding.spinnerYear.setSelection(yearIndex)
+            }
+
+            // Set month - the listener will handle filtering if needed
+            val monthIndex = allMonths.indexOf(monthName)
+            if (monthIndex != -1) {
+                binding.spinnerMonth.setSelection(monthIndex)
+            } else {
+                binding.spinnerMonth.setSelection(0)
             }
         } catch (e: Exception) {
             // If parsing fails, set to "No Expiry"
@@ -114,13 +182,15 @@ class EditPasswordFragment : Fragment() {
         val username = binding.etUsername.text.toString()
         val password = binding.etPassword.text.toString()
         val expiryDate = getExpiryDateFromSpinners()
+        val notes = binding.etNotes.text.toString()
 
         if (context.isNotEmpty() && password.isNotEmpty()) {
             val updatedPassword = passwordEntry.copy(
                 context = context,
                 username = username,
                 password = password,
-                expiryDate = expiryDate
+                expiryDate = expiryDate,
+                notes = notes
             )
             passwordRepository.updatePassword(updatedPassword)
             Toast.makeText(requireContext(), "Password updated successfully", Toast.LENGTH_SHORT).show()

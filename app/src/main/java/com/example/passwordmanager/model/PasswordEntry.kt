@@ -9,5 +9,6 @@ data class PasswordEntry(
     val username: String = "",
     val password: String,
     val expiryDate: String = "",
+    val notes: String = "",
     val id: String = ""
 ) : Parcelable

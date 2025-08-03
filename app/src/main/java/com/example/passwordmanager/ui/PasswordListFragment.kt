@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -73,18 +74,54 @@ class PasswordListFragment : Fragment() {
             private val usernameText: TextView = itemView.findViewById(R.id.username_text)
             private val passwordText: TextView = itemView.findViewById(R.id.password_text)
             private val expiryText: TextView = itemView.findViewById(R.id.expiry_text)
+            private val notesText: TextView = itemView.findViewById(R.id.notes_text)
+            private val togglePasswordButton: ImageButton = itemView.findViewById(R.id.btn_toggle_password)
+            
+            private var isPasswordVisible = false
+            private var currentPassword = ""
 
             fun bind(passwordEntry: PasswordEntry) {
                 titleText.text = passwordEntry.context
                 usernameText.text = if (passwordEntry.username.isNotEmpty()) "Username: ${passwordEntry.username}" else "Username: (not stored)"
-                passwordText.text = "Password: ${passwordEntry.password}"
+                
+                // Store the actual password and show masked version by default
+                currentPassword = passwordEntry.password
+                isPasswordVisible = false
+                updatePasswordDisplay()
+                
                 expiryText.text = if (passwordEntry.expiryDate.isNotEmpty()) "Expires: ${formatExpiryDate(passwordEntry.expiryDate)}" else "Expires: Never"
+                notesText.text = if (passwordEntry.notes.isNotEmpty()) "Notes: ${passwordEntry.notes}" else ""
+                notesText.visibility = if (passwordEntry.notes.isNotEmpty()) View.VISIBLE else View.GONE
+                
+                // Set up password toggle button
+                togglePasswordButton.setOnClickListener {
+                    isPasswordVisible = !isPasswordVisible
+                    updatePasswordDisplay()
+                }
                 
                 // Add click listener for editing
                 itemView.setOnClickListener {
                     val bundle = Bundle()
                     bundle.putParcelable("passwordEntry", passwordEntry)
                     findNavController().navigate(R.id.action_passwordListFragment_to_editPasswordFragment, bundle)
+                }
+            }
+            
+            private fun updatePasswordDisplay() {
+                if (isPasswordVisible) {
+                    passwordText.text = "Password: $currentPassword"
+                    togglePasswordButton.setImageResource(R.drawable.ic_visibility)
+                } else {
+                    passwordText.text = "Password: ${maskPassword(currentPassword)}"
+                    togglePasswordButton.setImageResource(R.drawable.ic_visibility_off)
+                }
+            }
+            
+            private fun maskPassword(password: String): String {
+                return if (password.length <= 2) {
+                    "*".repeat(password.length)
+                } else {
+                    password.first() + "*".repeat(password.length - 2) + password.last()
                 }
             }
 

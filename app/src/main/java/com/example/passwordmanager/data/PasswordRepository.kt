@@ -5,15 +5,66 @@ import android.content.SharedPreferences
 import com.example.passwordmanager.model.PasswordEntry
 import com.example.passwordmanager.model.CreditCardEntry
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
+import java.lang.reflect.Type
 import java.util.UUID
 
 class PasswordRepository(context: Context) {
 
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences("PasswordManager", Context.MODE_PRIVATE)
-    private val gson = Gson()
+    private val gson = GsonBuilder()
+        .registerTypeAdapter(PasswordEntry::class.java, PasswordEntryDeserializer())
+        .registerTypeAdapter(CreditCardEntry::class.java, CreditCardEntryDeserializer())
+        .create()
     private val passwordList = mutableListOf<PasswordEntry>()
     private val creditCardList = mutableListOf<CreditCardEntry>()
+
+    // Custom deserializer to handle missing fields in existing data
+    private class PasswordEntryDeserializer : JsonDeserializer<PasswordEntry> {
+        override fun deserialize(
+            json: JsonElement?,
+            typeOfT: Type?,
+            context: JsonDeserializationContext?
+        ): PasswordEntry {
+            val jsonObject = json?.asJsonObject ?: JsonObject()
+            
+            return PasswordEntry(
+                context = jsonObject.get("context")?.asString ?: "",
+                username = jsonObject.get("username")?.asString ?: "",
+                password = jsonObject.get("password")?.asString ?: "",
+                expiryDate = jsonObject.get("expiryDate")?.asString ?: "",
+                notes = jsonObject.get("notes")?.asString ?: "",
+                id = jsonObject.get("id")?.asString ?: ""
+            )
+        }
+    }
+
+    // Custom deserializer to handle missing fields in existing credit card data
+    private class CreditCardEntryDeserializer : JsonDeserializer<CreditCardEntry> {
+        override fun deserialize(
+            json: JsonElement?,
+            typeOfT: Type?,
+            context: JsonDeserializationContext?
+        ): CreditCardEntry {
+            val jsonObject = json?.asJsonObject ?: JsonObject()
+            
+            return CreditCardEntry(
+                cardNumber = jsonObject.get("cardNumber")?.asString ?: "",
+                cardHolder = jsonObject.get("cardHolder")?.asString ?: "",
+                bankName = jsonObject.get("bankName")?.asString ?: "",
+                cardType = jsonObject.get("cardType")?.asString ?: "",
+                expiryDate = jsonObject.get("expiryDate")?.asString ?: "",
+                cvv = jsonObject.get("cvv")?.asString ?: "",
+                notes = jsonObject.get("notes")?.asString ?: "",
+                id = jsonObject.get("id")?.asString ?: ""
+            )
+        }
+    }
 
     init {
         loadData()
@@ -21,7 +72,7 @@ class PasswordRepository(context: Context) {
 
     private fun loadData() {
         try {
-            // Load passwords
+            // Load passwords with custom deserializer that handles missing fields
             val passwordJson = sharedPreferences.getString("passwords", "[]")
             val passwordType = object : TypeToken<List<PasswordEntry>>() {}.type
             val loadedPasswords = gson.fromJson<List<PasswordEntry>>(passwordJson, passwordType) ?: emptyList()

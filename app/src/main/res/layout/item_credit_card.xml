@@ -25,10 +25,37 @@
         android:layout_marginBottom="8dp" />
 
     <TextView
+        android:id="@+id/card_type_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Type: Visa"
+        android:textSize="14sp"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/bank_name_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bank: Chase"
+        android:textSize="14sp"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
         android:id="@+id/expiry_date_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Expiry: 12/25"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/notes_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Notes: Some notes here"
+        android:textSize="12sp"
+        android:textColor="@android:color/darker_gray"
+        android:maxLines="2"
+        android:ellipsize="end" />
 
 </LinearLayout> 
