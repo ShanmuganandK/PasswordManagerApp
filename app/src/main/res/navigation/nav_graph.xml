@@ -16,6 +16,10 @@
         <action
             android:id="@+id/action_passwordListFragment_to_creditCardListFragment"
             app:destination="@id/creditCardListFragment" />
+            
+        <action
+            android:id="@+id/action_passwordListFragment_to_editPasswordFragment"
+            app:destination="@id/editPasswordFragment" />
     </fragment>
 
     <fragment
@@ -31,11 +35,33 @@
         <action
             android:id="@+id/action_creditCardListFragment_to_creditCardFragment"
             app:destination="@id/creditCardFragment" />
+            
+        <action
+            android:id="@+id/action_creditCardListFragment_to_editCreditCardFragment"
+            app:destination="@id/editCreditCardFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/creditCardFragment"
         android:name="com.example.passwordmanager.ui.CreditCardFragment"
         android:label="Add Credit Card" />
+
+    <fragment
+        android:id="@+id/editPasswordFragment"
+        android:name="com.example.passwordmanager.ui.EditPasswordFragment"
+        android:label="Edit Password">
+        <argument
+            android:name="passwordEntry"
+            app:argType="com.example.passwordmanager.model.PasswordEntry" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editCreditCardFragment"
+        android:name="com.example.passwordmanager.ui.EditCreditCardFragment"
+        android:label="Edit Credit Card">
+        <argument
+            android:name="creditCardEntry"
+            app:argType="com.example.passwordmanager.model.CreditCardEntry" />
+    </fragment>
 
 </navigation> 

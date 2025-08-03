@@ -8,24 +8,24 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.passwordmanager.R
-import com.example.passwordmanager.databinding.FragmentAddPasswordBinding
+import com.example.passwordmanager.databinding.FragmentEditPasswordBinding
 import com.example.passwordmanager.data.PasswordRepository
 import com.example.passwordmanager.model.PasswordEntry
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class AddPasswordFragment : Fragment() {
+class EditPasswordFragment : Fragment() {
 
-    private var _binding: FragmentAddPasswordBinding? = null
+    private var _binding: FragmentEditPasswordBinding? = null
     private val binding get() = _binding!!
     private lateinit var passwordRepository: PasswordRepository
+    private lateinit var passwordEntry: PasswordEntry
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAddPasswordBinding.inflate(inflater, container, false)
+        _binding = FragmentEditPasswordBinding.inflate(inflater, container, false)
         passwordRepository = PasswordRepository(requireContext())
         return binding.root
     }
@@ -33,9 +33,21 @@ class AddPasswordFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Get password entry from arguments
+        arguments?.let { args ->
+            passwordEntry = args.getParcelable("passwordEntry") ?: return@let
+        }
+
         setupExpiryDateSpinners()
-        binding.btnSavePassword.setOnClickListener {
-            savePassword()
+        // Load existing password data
+        loadPasswordData()
+
+        binding.btnUpdatePassword.setOnClickListener {
+            updatePassword()
+        }
+
+        binding.btnDeletePassword.setOnClickListener {
+            deletePassword()
         }
     }
 
@@ -59,18 +71,59 @@ class AddPasswordFragment : Fragment() {
         binding.spinnerYear.adapter = yearAdapter
     }
 
-    private fun savePassword() {
-        val password = binding.etPassword.text.toString()
+    private fun loadPasswordData() {
+        binding.etContext.setText(passwordEntry.context)
+        binding.etUsername.setText(passwordEntry.username)
+        binding.etPassword.setText(passwordEntry.password)
+        setExpiryDateInSpinners(passwordEntry.expiryDate)
+    }
+
+    private fun setExpiryDateInSpinners(expiryDate: String) {
+        if (expiryDate.isEmpty()) {
+            binding.spinnerMonth.setSelection(0) // "No Expiry"
+            binding.spinnerYear.setSelection(0) // "No Expiry"
+            return
+        }
+
+        try {
+            val date = LocalDate.parse(expiryDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            val monthName = date.month.getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH)
+            val year = date.year.toString()
+
+            val months = arrayOf("No Expiry", "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December")
+            val monthIndex = months.indexOf(monthName)
+            if (monthIndex != -1) {
+                binding.spinnerMonth.setSelection(monthIndex)
+            }
+
+            val currentYear = LocalDate.now().year
+            val yearIndex = year.toInt() - currentYear + 1 // +1 because "No Expiry" is at index 0
+            if (yearIndex >= 0 && yearIndex <= 21) { // 0-20 years + "No Expiry"
+                binding.spinnerYear.setSelection(yearIndex)
+            }
+        } catch (e: Exception) {
+            // If parsing fails, set to "No Expiry"
+            binding.spinnerMonth.setSelection(0)
+            binding.spinnerYear.setSelection(0)
+        }
+    }
+
+    private fun updatePassword() {
         val context = binding.etContext.text.toString()
         val username = binding.etUsername.text.toString()
+        val password = binding.etPassword.text.toString()
         val expiryDate = getExpiryDateFromSpinners()
 
-        if (password.isNotEmpty() && context.isNotEmpty()) {
-            val passwordEntry = PasswordEntry(context, username, password, expiryDate)
-            passwordRepository.addPassword(passwordEntry)
-            Toast.makeText(requireContext(), "Password saved successfully", Toast.LENGTH_SHORT).show()
-            
-            // Navigate back to password list
+        if (context.isNotEmpty() && password.isNotEmpty()) {
+            val updatedPassword = passwordEntry.copy(
+                context = context,
+                username = username,
+                password = password,
+                expiryDate = expiryDate
+            )
+            passwordRepository.updatePassword(updatedPassword)
+            Toast.makeText(requireContext(), "Password updated successfully", Toast.LENGTH_SHORT).show()
             findNavController().navigateUp()
         } else {
             Toast.makeText(requireContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show()
@@ -95,8 +148,14 @@ class AddPasswordFragment : Fragment() {
         return "$selectedYear-$monthNumber-01"
     }
 
+    private fun deletePassword() {
+        passwordRepository.deletePassword(passwordEntry.id)
+        Toast.makeText(requireContext(), "Password deleted successfully", Toast.LENGTH_SHORT).show()
+        findNavController().navigateUp()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-}
+} 

@@ -77,6 +77,13 @@ class CreditCardListFragment : Fragment() {
                 cardHolderText.text = "Card Holder: ${creditCardEntry.cardHolder}"
                 cardNumberText.text = "Card Number: ${maskCardNumber(creditCardEntry.cardNumber)}"
                 expiryDateText.text = "Expiry: ${creditCardEntry.expiryDate}"
+                
+                // Add click listener for editing
+                itemView.setOnClickListener {
+                    val bundle = Bundle()
+                    bundle.putParcelable("creditCardEntry", creditCardEntry)
+                    findNavController().navigate(R.id.action_creditCardListFragment_to_editCreditCardFragment, bundle)
+                }
             }
 
             private fun maskCardNumber(cardNumber: String): String {

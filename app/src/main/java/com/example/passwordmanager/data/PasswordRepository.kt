@@ -20,19 +20,26 @@ class PasswordRepository(context: Context) {
     }
 
     private fun loadData() {
-        // Load passwords
-        val passwordJson = sharedPreferences.getString("passwords", "[]")
-        val passwordType = object : TypeToken<List<PasswordEntry>>() {}.type
-        val loadedPasswords = gson.fromJson<List<PasswordEntry>>(passwordJson, passwordType) ?: emptyList()
-        passwordList.clear()
-        passwordList.addAll(loadedPasswords)
+        try {
+            // Load passwords
+            val passwordJson = sharedPreferences.getString("passwords", "[]")
+            val passwordType = object : TypeToken<List<PasswordEntry>>() {}.type
+            val loadedPasswords = gson.fromJson<List<PasswordEntry>>(passwordJson, passwordType) ?: emptyList()
+            passwordList.clear()
+            passwordList.addAll(loadedPasswords)
 
-        // Load credit cards
-        val creditCardJson = sharedPreferences.getString("credit_cards", "[]")
-        val creditCardType = object : TypeToken<List<CreditCardEntry>>() {}.type
-        val loadedCreditCards = gson.fromJson<List<CreditCardEntry>>(creditCardJson, creditCardType) ?: emptyList()
-        creditCardList.clear()
-        creditCardList.addAll(loadedCreditCards)
+            // Load credit cards
+            val creditCardJson = sharedPreferences.getString("credit_cards", "[]")
+            val creditCardType = object : TypeToken<List<CreditCardEntry>>() {}.type
+            val loadedCreditCards = gson.fromJson<List<CreditCardEntry>>(creditCardJson, creditCardType) ?: emptyList()
+            creditCardList.clear()
+            creditCardList.addAll(loadedCreditCards)
+        } catch (e: Exception) {
+            // If there's any error loading data, clear it and start fresh
+            passwordList.clear()
+            creditCardList.clear()
+            sharedPreferences.edit().clear().apply()
+        }
     }
 
     private fun saveData() {
@@ -66,6 +73,19 @@ class PasswordRepository(context: Context) {
 
     fun deletePassword(passwordId: String) {
         passwordList.removeAll { it.id == passwordId }
+        saveData()
+    }
+
+    fun updateCreditCard(creditCardEntry: CreditCardEntry) {
+        val index = creditCardList.indexOfFirst { it.id == creditCardEntry.id }
+        if (index != -1) {
+            creditCardList[index] = creditCardEntry
+            saveData()
+        }
+    }
+
+    fun deleteCreditCard(cardId: String) {
+        creditCardList.removeAll { it.id == cardId }
         saveData()
     }
 

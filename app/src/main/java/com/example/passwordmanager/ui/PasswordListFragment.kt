@@ -72,11 +72,30 @@ class PasswordListFragment : Fragment() {
             private val titleText: TextView = itemView.findViewById(R.id.title_text)
             private val usernameText: TextView = itemView.findViewById(R.id.username_text)
             private val passwordText: TextView = itemView.findViewById(R.id.password_text)
+            private val expiryText: TextView = itemView.findViewById(R.id.expiry_text)
 
             fun bind(passwordEntry: PasswordEntry) {
                 titleText.text = passwordEntry.context
-                usernameText.text = "Username: (not stored)"
+                usernameText.text = if (passwordEntry.username.isNotEmpty()) "Username: ${passwordEntry.username}" else "Username: (not stored)"
                 passwordText.text = "Password: ${passwordEntry.password}"
+                expiryText.text = if (passwordEntry.expiryDate.isNotEmpty()) "Expires: ${formatExpiryDate(passwordEntry.expiryDate)}" else "Expires: Never"
+                
+                // Add click listener for editing
+                itemView.setOnClickListener {
+                    val bundle = Bundle()
+                    bundle.putParcelable("passwordEntry", passwordEntry)
+                    findNavController().navigate(R.id.action_passwordListFragment_to_editPasswordFragment, bundle)
+                }
+            }
+
+            private fun formatExpiryDate(expiryDate: String): String {
+                return try {
+                    val date = java.time.LocalDate.parse(expiryDate, java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                    val monthName = date.month.getDisplayName(java.time.format.TextStyle.SHORT, java.util.Locale.ENGLISH)
+                    "${monthName} ${date.year}"
+                } catch (e: Exception) {
+                    expiryDate
+                }
             }
         }
     }
