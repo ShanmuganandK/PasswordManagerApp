@@ -94,38 +94,26 @@ class CreditCardListFragment : Fragment() {
         inner class CreditCardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             private val cardHolderText: TextView = itemView.findViewById(R.id.card_holder_text)
             private val cardNumberText: TextView = itemView.findViewById(R.id.card_number_text)
-            private val cardTypeText: TextView = itemView.findViewById(R.id.card_type_text)
-            private val bankNameText: TextView = itemView.findViewById(R.id.bank_name_text)
             private val expiryDateText: TextView = itemView.findViewById(R.id.expiry_date_text)
-            private val notesText: TextView = itemView.findViewById(R.id.notes_text)
-            private val cardContent: android.view.View = itemView.findViewById(R.id.card_content)
+            private val cardTitleText: TextView = itemView.findViewById(R.id.card_title)
+            private val bankNameText: TextView = itemView.findViewById(R.id.bank_name_text)
 
             fun bind(creditCardEntry: CreditCardEntry, position: Int) {
-                // Apply glassy card color based on position
-                val baseColor = CardColorUtil.getCardColor(itemView.context, position)
-                val glassyColor = CardColorUtil.getGlassyColor(baseColor, 0.9f)
-                val textColor = CardColorUtil.getTextColorForBackground(baseColor)
-                
-                // Set card background color with glassy effect
-                cardContent.setBackgroundColor(glassyColor)
-                
-                // Set text colors
-                cardHolderText.setTextColor(textColor)
-                cardNumberText.setTextColor(textColor)
-                cardTypeText.setTextColor(textColor)
-                bankNameText.setTextColor(textColor)
-                expiryDateText.setTextColor(textColor)
-                notesText.setTextColor(textColor)
-                
-                cardHolderText.text = "Card Holder: ${creditCardEntry.cardHolder}"
-                cardNumberText.text = "Card Number: ${maskCardNumber(creditCardEntry.cardNumber)}"
-                cardTypeText.text = if (creditCardEntry.cardType.isNotEmpty()) "Type: ${creditCardEntry.cardType}" else ""
-                cardTypeText.visibility = if (creditCardEntry.cardType.isNotEmpty()) View.VISIBLE else View.GONE
-                bankNameText.text = if (creditCardEntry.bankName.isNotEmpty()) "Bank: ${creditCardEntry.bankName}" else ""
-                bankNameText.visibility = if (creditCardEntry.bankName.isNotEmpty()) View.VISIBLE else View.GONE
-                expiryDateText.text = "Expiry: ${formatExpiryDate(creditCardEntry.expiryDate)}"
-                notesText.text = if (creditCardEntry.notes.isNotEmpty()) "Notes: ${creditCardEntry.notes}" else ""
-                notesText.visibility = if (creditCardEntry.notes.isNotEmpty()) View.VISIBLE else View.GONE
+                itemView.background = CardColorUtil.getCardGradient(itemView.context, position)
+                cardHolderText.text = creditCardEntry.cardHolder.uppercase()
+                cardNumberText.text = maskCardNumber(creditCardEntry.cardNumber)
+                expiryDateText.text = formatExpiryDate(creditCardEntry.expiryDate)
+                if (creditCardEntry.cardType.isNotEmpty()) {
+                    cardTitleText.text = creditCardEntry.cardType
+                } else {
+                    cardTitleText.text = "CREDIT CARD"
+                }
+                if (creditCardEntry.bankName.isNotEmpty()) {
+                    bankNameText.text = creditCardEntry.bankName
+                    bankNameText.visibility = View.VISIBLE
+                } else {
+                    bankNameText.visibility = View.GONE
+                }
                 
                 // Add click listener for editing
                 itemView.setOnClickListener {
@@ -138,19 +126,15 @@ class CreditCardListFragment : Fragment() {
             private fun formatExpiryDate(expiryDate: String): String {
                 return try {
                     val date = java.time.LocalDate.parse(expiryDate, java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-                    val monthName = date.month.getDisplayName(java.time.format.TextStyle.SHORT, java.util.Locale.ENGLISH)
-                    "${monthName} ${date.year}"
+                    date.format(java.time.format.DateTimeFormatter.ofPattern("MM/yy"))
                 } catch (e: Exception) {
                     expiryDate
                 }
             }
 
             private fun maskCardNumber(cardNumber: String): String {
-                return if (cardNumber.length >= 4) {
-                    "**** **** **** ${cardNumber.takeLast(4)}"
-                } else {
-                    cardNumber
-                }
+                if (cardNumber.length != 16) return "**** **** **** ****"
+                return "${cardNumber.substring(0, 4)} ${cardNumber.substring(4, 8)} ${cardNumber.substring(8, 12)} ${cardNumber.substring(12, 16)}"
             }
         }
     }
@@ -164,4 +148,4 @@ class CreditCardListFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-} 
+}

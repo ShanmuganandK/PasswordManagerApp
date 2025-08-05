@@ -106,9 +106,8 @@ class PasswordListFragment : Fragment() {
 
             fun bind(passwordEntry: PasswordEntry, position: Int) {
                 // Apply glassy card color based on position
-                val baseColor = CardColorUtil.getCardColor(itemView.context, position)
-                val glassyColor = CardColorUtil.getGlassyColor(baseColor, 0.9f)
-                val textColor = CardColorUtil.getTextColorForBackground(baseColor)
+                val glassyColor = CardColorUtil.getGlassyColor(android.graphics.Color.DKGRAY, 0.9f)
+                val textColor = CardColorUtil.getTextColorForBackground(android.graphics.Color.DKGRAY)
                 
                 // Set card background color with glassy effect
                 cardContent.setBackgroundColor(glassyColor)

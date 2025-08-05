@@ -2,50 +2,24 @@ package com.example.passwordmanager.util
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import com.example.passwordmanager.R
 
 object CardColorUtil {
-    
-    /**
-     * Get a color for a card based on its position
-     * This ensures each card gets a unique color in a cycling pattern with high contrast
-     */
-    fun getCardColor(context: Context, position: Int): Int {
-        val colors = context.resources.obtainTypedArray(R.array.card_colors)
-        val colorIndex = position % colors.length()
-        val color = colors.getColor(colorIndex, Color.GRAY)
-        colors.recycle()
-        return color
-    }
-    
-    /**
-     * Get a color with enhanced contrast from the previous card
-     */
-    fun getCardColorWithContrast(context: Context, position: Int, previousColor: Int? = null): Int {
-        val colors = context.resources.obtainTypedArray(R.array.card_colors)
-        val totalColors = colors.length()
-        
-        if (previousColor == null) {
-            val color = colors.getColor(0, Color.GRAY)
-            colors.recycle()
-            return color
+
+    fun getCardGradient(context: Context, position: Int): GradientDrawable {
+        val gradients = context.resources.obtainTypedArray(R.array.card_gradient_colors)
+        val gradientIndex = position % gradients.length()
+        val gradientResId = gradients.getResourceId(gradientIndex, 0)
+        val colors = context.resources.getIntArray(gradientResId)
+        gradients.recycle()
+
+        return GradientDrawable(
+            GradientDrawable.Orientation.TL_BR,
+            colors
+        ).apply {
+            cornerRadius = 16f * context.resources.displayMetrics.density
         }
-        
-        // Find the best contrasting color
-        var bestColor = colors.getColor(0, Color.GRAY)
-        var maxContrast = 0.0
-        
-        for (i in 0 until totalColors) {
-            val currentColor = colors.getColor(i, Color.GRAY)
-            val contrast = calculateColorContrast(previousColor, currentColor)
-            if (contrast > maxContrast) {
-                maxContrast = contrast
-                bestColor = currentColor
-            }
-        }
-        
-        colors.recycle()
-        return bestColor
     }
     
     /**
@@ -88,19 +62,6 @@ object CardColorUtil {
     }
     
     /**
-     * Get a color for a card based on its title/content
-     * This ensures the same content always gets the same color
-     */
-    fun getCardColorForContent(context: Context, content: String): Int {
-        val colors = context.resources.obtainTypedArray(R.array.card_colors)
-        val hash = content.hashCode()
-        val colorIndex = Math.abs(hash) % colors.length()
-        val color = colors.getColor(colorIndex, Color.GRAY)
-        colors.recycle()
-        return color
-    }
-    
-    /**
      * Get a darker shade of the given color for text
      */
     fun getTextColorForBackground(backgroundColor: Int): Int {
@@ -124,4 +85,4 @@ object CardColorUtil {
         val blue = (Color.blue(color) * factor).toInt()
         return Color.rgb(red, green, blue)
     }
-} 
+}

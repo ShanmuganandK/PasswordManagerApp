@@ -1,6 +1,6 @@
 # 🔐 Password Manager App
 
-A secure Android application for managing passwords and credit card information with comprehensive local storage, advanced validation, and modern UI features.
+A secure Android application for managing passwords and credit card information with comprehensive local storage, advanced validation, modern UI features, and beautiful card-based design.
 
 ## ✨ Features
 
@@ -22,6 +22,7 @@ A secure Android application for managing passwords and credit card information 
 - **CVV Masking**: Secure CVV input with show/hide toggle functionality
 - **Bank Name & Notes**: Optional fields for additional card information
 - **Smart Expiry Date Selection**: Dynamic month filtering based on selected year
+- **Beautiful Card Design**: Modern rounded cards with clean borders and proper spacing
 
 ### 🛡️ Security Features
 - **Local Storage**: Data encrypted in SharedPreferences with Gson serialization
@@ -38,6 +39,8 @@ A secure Android application for managing passwords and credit card information 
 - **Responsive Layouts**: Optimized layouts for different screen sizes
 - **Visual Feedback**: Color-coded validation messages and status indicators
 - **Smart Spinners**: Dynamic expiry date selection with current date awareness
+- **Modern Card Design**: Rounded credit cards with clean borders and proper spacing
+- **Theme Support**: Light and dark theme compatibility
 
 ## 🚀 Getting Started
 
@@ -61,9 +64,29 @@ A secure Android application for managing passwords and credit card information 
    - Navigate to the project folder and select it
 
 3. **Build and Run**
+
+   **Option 1: Using provided build scripts (Recommended)**
    ```bash
+   # Windows - Full build and install
+   build_and_install.bat
+   
+   # Windows - Build only
+   build_only.bat
+   
+   # Windows - Quick build and install
+   quick_build.bat
+   ```
+
+   **Option 2: Manual commands**
+   ```bash
+   # Build debug APK
    ./gradlew assembleDebug
+   
+   # Install on connected device/emulator
    ./gradlew installDebug
+   
+   # Or install manually
+   adb install -r app/build/outputs/apk/debug/app-debug.apk
    ```
 
 ## 📱 Usage
@@ -121,6 +144,7 @@ A secure Android application for managing passwords and credit card information 
 - **Masked Display**: Card numbers shown as **** **** **** 1234 in lists
 - **Bank Information**: Displays bank name if provided
 - **Notes Support**: Optional notes for additional card information
+- **Modern Design**: Beautiful rounded cards with clean borders and proper spacing
 
 ## 🏗️ Project Structure
 
@@ -142,12 +166,21 @@ app/
 │   │   │   ├── CreditCardFragment.kt    # Add credit card form with validation
 │   │   │   └── EditCreditCardFragment.kt # Edit credit card form with validation
 │   │   └── util/
-│   │       └── CardType.kt              # Card type detection and validation
+│   │       ├── CardType.kt              # Card type detection and validation
+│   │       ├── CardColorUtil.kt         # Card color utilities
+│   │       ├── CardValidator.kt         # Credit card validation logic
+│   │       └── StackedCardDecoration.kt # RecyclerView decoration for cards
 │   └── res/
 │       ├── layout/                      # UI layouts with Material Design
 │       ├── navigation/                  # Navigation graphs
 │       ├── drawable/                    # Custom drawables for UI elements
+│       │   ├── card_rounded_border.xml  # Rounded card borders
+│       │   ├── card_border_background.xml # Card border backgrounds
+│       │   └── glassy_card_background.xml # Glassy card effects
 │       └── values/                      # Resources and themes
+├── build_and_install.bat               # Full build and install script
+├── build_only.bat                      # Build only script
+└── quick_build.bat                     # Quick build and install script
 ```
 
 ## 🔧 Technical Details
@@ -178,10 +211,25 @@ app/
 - **Dynamic Spinner Logic**: Smart date selection with current date awareness
 - **Data Migration**: Backward compatibility for existing data
 - **Parcelable Models**: Efficient data passing between fragments
+- **Modern Card Design**: Rounded corners with clean borders and proper spacing
 
 ## 🛠️ Development
 
 ### Building the Project
+
+**Using Build Scripts (Recommended):**
+```bash
+# Windows - Full build and install
+build_and_install.bat
+
+# Windows - Build only
+build_only.bat
+
+# Windows - Quick build and install
+quick_build.bat
+```
+
+**Manual Commands:**
 ```bash
 # Debug build
 ./gradlew assembleDebug
@@ -191,6 +239,21 @@ app/
 
 # Install on connected device
 ./gradlew installDebug
+
+# Clean build
+./gradlew clean assembleDebug
+```
+
+### Installing on Emulator/Device
+```bash
+# Check connected devices
+adb devices
+
+# Install APK
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+
+# Launch app
+adb shell am start -n com.example.passwordmanager/.ui.LoginActivity
 ```
 
 ### Running Tests
@@ -201,6 +264,21 @@ app/
 # Instrumented tests
 ./gradlew connectedAndroidTest
 ```
+
+## 🎨 UI/UX Improvements
+
+### Credit Card Design
+- **Rounded Corners**: 20dp corner radius for modern appearance
+- **Clean Borders**: 6dp border width with proper color contrast
+- **Proper Spacing**: Optimized margins and padding for better visual hierarchy
+- **Theme Support**: Light and dark theme compatibility
+- **Responsive Layout**: Adapts to different screen sizes
+
+### Visual Enhancements
+- **Material Design**: Consistent Material Design components
+- **Color Coding**: Visual feedback for validation states
+- **Smooth Animations**: Fragment transitions and list animations
+- **Accessibility**: Proper content descriptions and focus handling
 
 ## 🔒 Security Considerations
 
@@ -224,6 +302,10 @@ app/
 - [x] **UI Improvements**: Material Design components and better user experience
 - [x] **Navigation Enhancement**: Proper fragment navigation with safe args
 - [x] **Code Cleanup**: Removed unused code and optimized performance
+- [x] **Modern Card Design**: Rounded credit cards with clean borders and proper spacing
+- [x] **Build Scripts**: Windows batch scripts for easy building and installation
+- [x] **Theme Support**: Light and dark theme compatibility for card backgrounds
+- [x] **Visual Polish**: Improved spacing, margins, and overall visual hierarchy
 
 ### 🔄 Future Enhancements
 - [ ] Biometric authentication
@@ -231,11 +313,13 @@ app/
 - [ ] Auto-fill integration
 - [ ] Password generator
 - [ ] Export/Import functionality
-- [ ] Dark theme support
+- [ ] Enhanced dark theme support
 - [ ] Widget support
 - [ ] Backup to cloud storage
 - [ ] Search functionality
 - [ ] Categories/Tags for organization
+- [ ] Card color customization
+- [ ] Advanced animations and transitions
 
 ## 📄 License
 

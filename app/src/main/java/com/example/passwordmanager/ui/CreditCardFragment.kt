@@ -156,7 +156,7 @@ class CreditCardFragment : Fragment() {
                 cardNumber = cardNumber,
                 cardHolder = cardHolder,
                 bankName = bankName,
-                cardType = cardType.displayName,
+                cardType = if (cardType == CardType.UNKNOWN) "" else cardType.displayName,
                 expiryDate = expiryDate,
                 cvv = cvv,
                 notes = notes

@@ -8,7 +8,7 @@ data class CreditCardEntry(
     val cardNumber: String = "",
     val cardHolder: String = "",
     val bankName: String = "",
-    val cardType: String = "",
+    var cardType: String = "",
     val expiryDate: String = "",
     val cvv: String = "",
     val notes: String = "",

@@ -83,9 +83,23 @@ class PasswordRepository(context: Context) {
             // Load credit cards
             val creditCardJson = sharedPreferences.getString("credit_cards", "[]")
             val creditCardType = object : TypeToken<List<CreditCardEntry>>() {}.type
-            val loadedCreditCards = gson.fromJson<List<CreditCardEntry>>(creditCardJson, creditCardType) ?: emptyList()
+            val loadedCreditCards = gson.fromJson<MutableList<CreditCardEntry>>(creditCardJson, creditCardType) ?: mutableListOf()
+            
+            // Data migration for existing cards with "Unknown" type
+            var needsSave = false
+            loadedCreditCards.forEach { card ->
+                if (card.cardType == "Unknown") {
+                    card.cardType = ""
+                    needsSave = true
+                }
+            }
+            
             creditCardList.clear()
             creditCardList.addAll(loadedCreditCards)
+            
+            if (needsSave) {
+                saveData()
+            }
         } catch (e: Exception) {
             // If there's any error loading data, clear it and start fresh
             passwordList.clear()
