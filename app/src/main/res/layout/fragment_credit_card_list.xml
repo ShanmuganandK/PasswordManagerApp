@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="?android:attr/colorBackground">
+    android:background="@drawable/metallic_black_gradient">
 
     <!-- Lean Header with gradient background -->
     <LinearLayout
@@ -87,4 +87,4 @@
         app:fabSize="mini"
         app:tint="@android:color/white" />
 
-</LinearLayout> 
+</LinearLayout>

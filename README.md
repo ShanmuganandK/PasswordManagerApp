@@ -39,8 +39,10 @@ A secure Android application for managing passwords and credit card information 
 - **Responsive Layouts**: Optimized layouts for different screen sizes
 - **Visual Feedback**: Color-coded validation messages and status indicators
 - **Smart Spinners**: Dynamic expiry date selection with current date awareness
-- **Modern Card Design**: Rounded credit cards with clean borders and proper spacing
-- **Theme Support**: Light and dark theme compatibility
+- **Vibrant Gradients**: Each card in the list is displayed with a unique, vibrant gradient, making the UI more dynamic and visually appealing.
+- **3D Text Effect**: The card number has a subtle 3D effect, making it stand out.
+- **Modern Card Design**: Rounded credit cards with clean borders and proper spacing.
+- **Theme Support**: Light and dark theme compatibility.
 
 ## 🚀 Getting Started
 

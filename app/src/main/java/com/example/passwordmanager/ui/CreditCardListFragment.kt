@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -99,7 +101,9 @@ class CreditCardListFragment : Fragment() {
             private val bankNameText: TextView = itemView.findViewById(R.id.bank_name_text)
 
             fun bind(creditCardEntry: CreditCardEntry, position: Int) {
-                itemView.background = CardColorUtil.getCardGradient(itemView.context, position)
+                val frameLayout = itemView as FrameLayout
+                frameLayout.background = CardColorUtil.getCardGradient(itemView.context, position)
+                frameLayout.foreground = ContextCompat.getDrawable(itemView.context, R.drawable.card_clipper)
                 cardHolderText.text = creditCardEntry.cardHolder.uppercase()
                 cardNumberText.text = maskCardNumber(creditCardEntry.cardNumber)
                 expiryDateText.text = formatExpiryDate(creditCardEntry.expiryDate)

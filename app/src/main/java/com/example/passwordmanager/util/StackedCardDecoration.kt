@@ -41,34 +41,6 @@ class StackedCardDecoration : RecyclerView.ItemDecoration() {
     
     override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         super.onDraw(c, parent, state)
-        
-        // Draw rounded shadows for stacked effect
-        for (i in 0 until parent.childCount) {
-            val child = parent.getChildAt(i)
-            val position = parent.getChildAdapterPosition(child)
-            
-            if (position >= 0) {
-                // Draw rounded shadow close to card
-                val shadowOffset = position * 1
-                val cornerRadius = 16f // Match card corner radius
-                
-                // Create shadow rect slightly offset from card
-                val shadowRect = RectF(
-                    child.left + shadowOffset + 2f,
-                    child.top + shadowOffset + 2f,
-                    child.right + shadowOffset + 2f,
-                    child.bottom + shadowOffset + 2f
-                )
-                
-                paint.alpha = if (isDarkTheme) {
-                    (60 - position * 6).coerceAtLeast(15) // Adjusted for dark theme
-                } else {
-                    (40 - position * 4).coerceAtLeast(8)
-                }
-                
-                // Draw rounded rectangle shadow
-                c.drawRoundRect(shadowRect, cornerRadius, cornerRadius, paint)
-            }
-        }
+        // No-op
     }
-} 
+}
