@@ -42,6 +42,8 @@ A secure Android application for managing passwords and credit card information 
 - **Vibrant Gradients**: Each card in the list is displayed with a unique, vibrant gradient, making the UI more dynamic and visually appealing.
 - **3D Text Effect**: The card number has a subtle 3D effect, making it stand out.
 - **Modern Card Design**: Rounded credit cards with clean borders and proper spacing.
+- **Metallic Black Background**: The credit card list page has a metallic black gradient background, giving the app a premium look and feel.
+- **Vibrant Blue Theme**: The app's primary color has been updated to a vibrant blue, giving it a fresh and modern look.
 - **Theme Support**: Light and dark theme compatibility.
 
 ## 🚀 Getting Started
