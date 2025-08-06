@@ -39,11 +39,14 @@ A secure Android application for managing passwords and credit card information 
 - **Responsive Layouts**: Optimized layouts for different screen sizes
 - **Visual Feedback**: Color-coded validation messages and status indicators
 - **Smart Spinners**: Dynamic expiry date selection with current date awareness
-- **Vibrant Gradients**: Each card in the list is displayed with a unique, vibrant gradient, making the UI more dynamic and visually appealing.
-- **3D Text Effect**: The card number has a subtle 3D effect, making it stand out.
-- **Modern Card Design**: Rounded credit cards with clean borders and proper spacing.
-- **Metallic Black Background**: The credit card list page has a metallic black gradient background, giving the app a premium look and feel.
-- **Vibrant Blue Theme**: The app's primary color has been updated to a vibrant blue, giving it a fresh and modern look.
+- **Tabbed Navigation**: The main screen now features a tabbed layout for easy navigation between Cards and Passwords.
+- **Unified Black Theme**: The entire app now uses a consistent black color scheme for a sleek and modern look.
+- **Custom Header**: The main screen has a custom header with the app title and subtitle.
+- **Exit Button**: An exit button has been added to the header to close the app.
+- **Auto-Logout**: The app will automatically log out after 2 minutes of inactivity for enhanced security.
+- **Dull Metallic Gradients**: The card gradients have been updated to a "dull to dark" metallic look.
+- **Improved Password Card Layout**: The password cards have been redesigned to match the credit card layout, with larger fonts and better spacing.
+- **New Copy Icon**: The copy icon has been updated to a more modern design.
 - **Theme Support**: Light and dark theme compatibility.
 
 ## 🚀 Getting Started

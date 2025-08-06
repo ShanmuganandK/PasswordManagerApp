@@ -74,8 +74,7 @@
         android:textSize="16sp"
         android:padding="16dp"
         android:layout_marginBottom="24dp"
-        android:visibility="gone"
-        style="@style/Widget.Material3.Button.OutlinedButton" />
+        android:visibility="gone" />
 
     <!-- Setup Button (for first time users) -->
     <com.google.android.material.button.MaterialButton
@@ -97,4 +96,4 @@
         android:gravity="center"
         android:layout_marginTop="32dp" />
 
-</LinearLayout> 
+</LinearLayout>

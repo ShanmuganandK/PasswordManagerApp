@@ -53,10 +53,6 @@ class CreditCardListFragment : Fragment() {
         binding.addCreditCardButton.setOnClickListener {
             findNavController().navigate(R.id.action_creditCardListFragment_to_creditCardFragment)
         }
-        
-        binding.passwordsButton.setOnClickListener {
-            findNavController().navigateUp()
-        }
     }
 
     private fun loadCreditCards() {

@@ -2,7 +2,12 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/passwordListFragment">
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.passwordmanager.ui.MainFragment"
+        android:label="SecureVault" />
 
     <fragment
         android:id="@+id/passwordListFragment"
@@ -64,4 +69,4 @@
             app:argType="com.example.passwordmanager.model.CreditCardEntry" />
     </fragment>
 
-</navigation> 
+</navigation>

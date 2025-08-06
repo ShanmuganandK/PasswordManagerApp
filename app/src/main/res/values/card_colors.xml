@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="card_gradient_colors">
-        <item>@array/card_gradient_blue</item>
-        <item>@array/card_gradient_orange</item>
-        <item>@array/card_gradient_green</item>
-        <item>@array/card_gradient_purple</item>
+        <item>@array/card_gradient_grey</item>
+        <item>@array/card_gradient_blue_grey</item>
+        <item>@array/card_gradient_brown</item>
+        <item>@array/card_gradient_deep_purple</item>
     </array>
 
-    <array name="card_gradient_blue">
-        <item>#2196F3</item>
-        <item>#1976D2</item>
+    <array name="card_gradient_grey">
+        <item>#616161</item>
+        <item>#212121</item>
     </array>
 
-    <array name="card_gradient_orange">
-        <item>#FF9800</item>
-        <item>#F57C00</item>
+    <array name="card_gradient_blue_grey">
+        <item>#546E7A</item>
+        <item>#263238</item>
     </array>
 
-    <array name="card_gradient_green">
-        <item>#4CAF50</item>
-        <item>#388E3C</item>
+    <array name="card_gradient_brown">
+        <item>#6D4C41</item>
+        <item>#3E2723</item>
     </array>
 
-    <array name="card_gradient_purple">
-        <item>#9C27B0</item>
-        <item>#7B1FA2</item>
+    <array name="card_gradient_deep_purple">
+        <item>#512DA8</item>
+        <item>#311B92</item>
     </array>
 </resources>
