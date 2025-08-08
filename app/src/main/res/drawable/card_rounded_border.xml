@@ -2,8 +2,8 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     
-    <!-- Card background -->
-    <solid android:color="#FFFFFF" />
+    <!-- Transparent background to allow gradient to show -->
+    <solid android:color="@android:color/transparent" />
     
     <!-- Rounded corners for both background and border -->
     <corners android:radius="20dp" />

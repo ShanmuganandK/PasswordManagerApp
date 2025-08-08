@@ -7,14 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.passwordmanager.R
 import com.example.passwordmanager.databinding.FragmentCreditCardBinding
 import com.example.passwordmanager.data.PasswordRepository
 import com.example.passwordmanager.model.CreditCardEntry
 import com.example.passwordmanager.util.CardType
+import com.example.passwordmanager.util.CardColorUtil
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -23,6 +26,14 @@ class CreditCardFragment : Fragment() {
     private var _binding: FragmentCreditCardBinding? = null
     private val binding get() = _binding!!
     private lateinit var passwordRepository: PasswordRepository
+    
+    // Card preview views
+    private lateinit var previewCardType: TextView
+    private lateinit var previewCardNumber: TextView
+    private lateinit var previewCardHolder: TextView
+    private lateinit var previewExpiryDate: TextView
+    private lateinit var previewCvv: TextView
+    private lateinit var previewBankName: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,9 +46,15 @@ class CreditCardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        
+        // Set metallic gradient background to match main page
+        binding.root.setBackgroundResource(R.drawable.metallic_black_gradient)
 
+        setupCardPreview()
         setupExpiryDateSpinners()
         setupCardNumberValidation()
+        setupTextWatchers()
+        updateCardPreview()
         
         binding.btnSaveCard.setOnClickListener {
             saveCreditCard()
@@ -48,6 +65,154 @@ class CreditCardFragment : Fragment() {
     private val currentMonth = LocalDate.now().monthValue - 1 // 0-based index
     private val allMonths = arrayOf("January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December")
+
+    private fun setupCardPreview() {
+        try {
+            val cardPreviewRoot = binding.cardPreview.root
+            previewCardType = cardPreviewRoot.findViewById(R.id.card_title)
+            previewCardNumber = cardPreviewRoot.findViewById(R.id.card_number_text)
+            previewCardHolder = cardPreviewRoot.findViewById(R.id.card_holder_text)
+            previewExpiryDate = cardPreviewRoot.findViewById(R.id.expiry_date_text)
+            previewBankName = cardPreviewRoot.findViewById(R.id.bank_name_text)
+            
+            // Create a hidden CVV view reference (not displayed on card)
+            previewCvv = TextView(requireContext())
+            
+            // Apply gradient background using next available position
+            val nextPosition = passwordRepository.getAllCreditCards().size
+            cardPreviewRoot.background = CardColorUtil.getCardGradient(requireContext(), nextPosition)
+        } catch (e: Exception) {
+            // Handle case where card preview is not available
+            e.printStackTrace()
+        }
+    }
+
+    private fun setupTextWatchers() {
+        // Card number watcher
+        binding.etCardNumber.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                updateCardPreview()
+            }
+        })
+        
+        // Card holder watcher
+        binding.etCardHolder.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                updateCardPreview()
+            }
+        })
+        
+        // CVV watcher
+        binding.etCvv.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                updateCardPreview()
+            }
+        })
+        
+        // Bank name watcher
+        binding.etBankName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                updateCardPreview()
+            }
+        })
+    }
+
+    private fun updateCardPreview() {
+        try {
+            val cardNumber = binding.etCardNumber.text.toString()
+            val cardHolder = binding.etCardHolder.text.toString()
+            val cvv = binding.etCvv.text.toString()
+            val bankName = binding.etBankName.text.toString()
+            
+            // Update card type
+            val cardType = CardType.detectCardType(cardNumber)
+            if (::previewCardType.isInitialized) {
+                previewCardType.text = if (cardType != CardType.UNKNOWN) cardType.displayName else "CREDIT CARD"
+            }
+            
+            // Update bank name
+            if (::previewBankName.isInitialized) {
+                previewBankName.text = if (bankName.isNotEmpty()) bankName else "Bank Name"
+            }
+            
+            // Update card number
+            if (::previewCardNumber.isInitialized) {
+                previewCardNumber.text = if (cardNumber.isNotEmpty()) {
+                    maskCardNumberForPreview(cardNumber)
+                } else {
+                    "**** **** **** ****"
+                }
+            }
+            
+            // Update card holder
+            if (::previewCardHolder.isInitialized) {
+                previewCardHolder.text = if (cardHolder.isNotEmpty()) {
+                    cardHolder.uppercase()
+                } else {
+                    "CARD HOLDER NAME"
+                }
+            }
+            
+            // Update CVV
+            if (::previewCvv.isInitialized) {
+                previewCvv.text = if (cvv.isNotEmpty()) {
+                    "*".repeat(cvv.length)
+                } else {
+                    "***"
+                }
+            }
+            
+            // Update expiry date
+            updateExpiryPreview()
+        } catch (e: Exception) {
+            // Handle preview update errors gracefully
+            e.printStackTrace()
+        }
+    }
+    
+    private fun updateExpiryPreview() {
+        try {
+            if (::previewExpiryDate.isInitialized) {
+                val selectedMonth = binding.spinnerMonth.selectedItem?.toString()
+                val selectedYear = binding.spinnerYear.selectedItem?.toString()
+                
+                if (selectedMonth != null && selectedYear != null) {
+                    val monthMap = mapOf(
+                        "January" to "01", "February" to "02", "March" to "03", "April" to "04",
+                        "May" to "05", "June" to "06", "July" to "07", "August" to "08",
+                        "September" to "09", "October" to "10", "November" to "11", "December" to "12"
+                    )
+                    val monthNumber = monthMap[selectedMonth] ?: "01"
+                    val yearShort = selectedYear.takeLast(2)
+                    previewExpiryDate.text = "$monthNumber/$yearShort"
+                } else {
+                    previewExpiryDate.text = "MM/YY"
+                }
+            }
+        } catch (e: Exception) {
+            // Handle expiry preview update errors gracefully
+            e.printStackTrace()
+        }
+    }
+    
+    private fun maskCardNumberForPreview(cardNumber: String): String {
+        return when {
+            cardNumber.length <= 4 -> cardNumber.padEnd(4, '*')
+            cardNumber.length <= 8 -> "${cardNumber.substring(0, 4)} ${cardNumber.substring(4).padEnd(4, '*')}"
+            cardNumber.length <= 12 -> "${cardNumber.substring(0, 4)} ${cardNumber.substring(4, 8)} ${cardNumber.substring(8).padEnd(4, '*')}"
+            else -> "${cardNumber.substring(0, 4)} ${cardNumber.substring(4, 8)} ${cardNumber.substring(8, 12)} ${cardNumber.substring(12).padEnd(4, '*')}"
+        }.let { formatted ->
+            if (formatted.length < 19) formatted.padEnd(19, '*') else formatted
+        }
+    }
 
     private fun setupExpiryDateSpinners() {
         // Setup year spinner (current year to 20 years from now)
@@ -90,8 +255,17 @@ class CreditCardFragment : Fragment() {
                     // Set to January for future years
                     binding.spinnerMonth.setSelection(0)
                 }
+                updateExpiryPreview()
             }
 
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
+        }
+        
+        // Add listener for month spinner
+        binding.spinnerMonth.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
+                updateExpiryPreview()
+            }
             override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
         }
     }

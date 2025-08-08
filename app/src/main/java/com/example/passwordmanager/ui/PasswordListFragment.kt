@@ -46,7 +46,7 @@ class PasswordListFragment : Fragment() {
         loadPasswords()
 
         binding.addPasswordButton.setOnClickListener {
-            findNavController().navigate(R.id.action_passwordListFragment_to_addPasswordFragment)
+            findNavController().navigate(R.id.action_mainFragment_to_addPasswordFragment)
         }
     }
 
@@ -113,7 +113,7 @@ class PasswordListFragment : Fragment() {
                     val bundle = Bundle()
                     bundle.putParcelable("passwordEntry", passwordEntry)
                     findNavController().navigate(
-                        R.id.action_passwordListFragment_to_editPasswordFragment,
+                        R.id.action_mainFragment_to_editPasswordFragment,
                         bundle
                     )
                 }

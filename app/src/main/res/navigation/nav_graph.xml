@@ -7,25 +7,25 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.passwordmanager.ui.MainFragment"
-        android:label="SecureVault" />
+        android:label="SecureVault" >
+        <action
+            android:id="@+id/action_mainFragment_to_addPasswordFragment"
+            app:destination="@id/addPasswordFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_editPasswordFragment"
+            app:destination="@id/editPasswordFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_addCreditCardFragment"
+            app:destination="@id/creditCardFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_editCreditCardFragment"
+            app:destination="@id/editCreditCardFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/passwordListFragment"
         android:name="com.example.passwordmanager.ui.PasswordListFragment"
-        android:label="Passwords">
-        
-        <action
-            android:id="@+id/action_passwordListFragment_to_addPasswordFragment"
-            app:destination="@id/addPasswordFragment" />
-            
-        <action
-            android:id="@+id/action_passwordListFragment_to_creditCardListFragment"
-            app:destination="@id/creditCardListFragment" />
-            
-        <action
-            android:id="@+id/action_passwordListFragment_to_editPasswordFragment"
-            app:destination="@id/editPasswordFragment" />
-    </fragment>
+        android:label="Passwords"/>
 
     <fragment
         android:id="@+id/addPasswordFragment"
@@ -35,16 +35,7 @@
     <fragment
         android:id="@+id/creditCardListFragment"
         android:name="com.example.passwordmanager.ui.CreditCardListFragment"
-        android:label="Credit Cards">
-        
-        <action
-            android:id="@+id/action_creditCardListFragment_to_creditCardFragment"
-            app:destination="@id/creditCardFragment" />
-            
-        <action
-            android:id="@+id/action_creditCardListFragment_to_editCreditCardFragment"
-            app:destination="@id/editCreditCardFragment" />
-    </fragment>
+        android:label="Credit Cards"/>
 
     <fragment
         android:id="@+id/creditCardFragment"

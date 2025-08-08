@@ -38,20 +38,12 @@ class CreditCardListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         
         // Detect dark theme
-        val isDarkTheme = (resources.configuration.uiMode and 
-            android.content.res.Configuration.UI_MODE_NIGHT_MASK) == 
-            android.content.res.Configuration.UI_MODE_NIGHT_YES
-        
-        val stackedDecoration = StackedCardDecoration()
-        stackedDecoration.setDarkTheme(isDarkTheme)
-        
         binding.creditCardRecyclerView.layoutManager = LinearLayoutManager(context)
-        binding.creditCardRecyclerView.addItemDecoration(stackedDecoration)
         loadCreditCards()
         
         // Set up navigation buttons
         binding.addCreditCardButton.setOnClickListener {
-            findNavController().navigate(R.id.action_creditCardListFragment_to_creditCardFragment)
+            findNavController().navigate(R.id.action_mainFragment_to_addCreditCardFragment)
         }
     }
 
@@ -119,7 +111,7 @@ class CreditCardListFragment : Fragment() {
                 itemView.setOnClickListener {
                     val bundle = Bundle()
                     bundle.putParcelable("creditCardEntry", creditCardEntry)
-                    findNavController().navigate(R.id.action_creditCardListFragment_to_editCreditCardFragment, bundle)
+                    findNavController().navigate(R.id.action_mainFragment_to_editCreditCardFragment, bundle)
                 }
             }
 
