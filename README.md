@@ -40,14 +40,16 @@ A secure Android application for managing passwords and credit card information 
 - **Visual Feedback**: Color-coded validation messages and status indicators
 - **Smart Spinners**: Dynamic expiry date selection with current date awareness
 - **Tabbed Navigation**: The main screen now features a tabbed layout for easy navigation between Cards and Passwords.
-- **Unified Black Theme**: The entire app now uses a consistent black color scheme for a sleek and modern look.
+- **Unified Metallic Theme**: The entire app now uses a consistent metallic black gradient background for a sleek and modern look.
+- **Real-time Card Preview**: Live card preview in add/edit screens that matches the exact appearance of cards in the list.
+- **Color-synchronized Cards**: Card previews use the same gradient colors as their position in the list for perfect visual consistency.
 - **Custom Header**: The main screen has a custom header with the app title and subtitle.
 - **Exit Button**: An exit button has been added to the header to close the app.
 - **Auto-Logout**: The app will automatically log out after 2 minutes of inactivity for enhanced security.
 - **Dull Metallic Gradients**: The card gradients have been updated to a "dull to dark" metallic look.
 - **Improved Password Card Layout**: The password cards have been redesigned to match the credit card layout, with larger fonts and better spacing.
 - **New Copy Icon**: The copy icon has been updated to a more modern design.
-- **Theme Support**: Light and dark theme compatibility.
+- **Theme Support**: Light and dark theme compatibility with proper text contrast.
 
 ## 🚀 Getting Started
 
@@ -274,6 +276,13 @@ adb shell am start -n com.example.passwordmanager/.ui.LoginActivity
 
 ## 🎨 UI/UX Improvements
 
+### Latest Visual Updates (v2.1)
+- **Real-time Card Preview**: Added live preview functionality to credit card add/edit screens
+- **Perfect Color Matching**: Card previews now use the exact same gradient colors as their position in the main list
+- **Consistent Background**: All screens now use the same metallic gradient background for visual unity
+- **Enhanced Accessibility**: White text and proper contrast ratios for better readability on dark backgrounds
+- **Seamless Experience**: Visual consistency between list view and edit screens for intuitive user experience
+
 ### Credit Card Design
 - **Rounded Corners**: 20dp corner radius for modern appearance
 - **Clean Borders**: 6dp border width with proper color contrast
@@ -286,6 +295,10 @@ adb shell am start -n com.example.passwordmanager/.ui.LoginActivity
 - **Color Coding**: Visual feedback for validation states
 - **Smooth Animations**: Fragment transitions and list animations
 - **Accessibility**: Proper content descriptions and focus handling
+- **Metallic Gradient**: Consistent metallic black gradient background across all screens
+- **High Contrast Text**: White text on dark backgrounds for optimal readability
+- **Real-time Preview**: Live card preview that updates as you type
+- **Color Consistency**: Preview cards match list card colors exactly
 
 ## 🔒 Security Considerations
 
@@ -313,6 +326,10 @@ adb shell am start -n com.example.passwordmanager/.ui.LoginActivity
 - [x] **Build Scripts**: Windows batch scripts for easy building and installation
 - [x] **Theme Support**: Light and dark theme compatibility for card backgrounds
 - [x] **Visual Polish**: Improved spacing, margins, and overall visual hierarchy
+- [x] **Real-time Card Preview**: Live preview of credit cards in add/edit screens with instant updates
+- [x] **Color Synchronization**: Card previews match exact gradient colors from list position
+- [x] **Consistent Background**: Metallic gradient background across all screens for visual unity
+- [x] **Accessibility**: White text on dark backgrounds for proper contrast and readability
 
 ### 🔄 Future Enhancements
 - [ ] Biometric authentication
