@@ -1,18 +1,43 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <!-- Header with Back Button -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Credit Card Information"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/white"
-        android:layout_marginBottom="16dp"/>
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+        
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginEnd="16dp" />
+            
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add Credit Card"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white" />
+            
+    </LinearLayout>
 
     <!-- Card Preview -->
     <include
@@ -20,119 +45,293 @@
         layout="@layout/card_preview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp" />
+
+    <!-- Card Information Section -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CARD INFORMATION"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="#80FFFFFF"
+        android:letterSpacing="0.1"
         android:layout_marginBottom="16dp" />
 
+    <!-- Card Number Field -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
-
-        <EditText
-            android:id="@+id/et_card_number"
+        android:background="@drawable/dark_glassmorphism_field"
+        android:padding="16dp"
+        android:layout_marginBottom="8dp">
+        
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Card Number"
-            android:inputType="number" />
-
+            android:orientation="vertical">
+            
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Card Number"
+                android:textSize="12sp"
+                android:textColor="#80FFFFFF"
+                android:layout_marginBottom="4dp" />
+                
+            <EditText
+                android:id="@+id/et_card_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:textColorHint="#60FFFFFF"
+                android:background="@android:color/transparent"
+                android:inputType="number"
+                android:hint="Enter card number" />
+                
+        </LinearLayout>
+        
         <TextView
             android:id="@+id/tv_card_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="8dp"
-            android:text=""
             android:textSize="12sp"
-            android:textColor="@android:color/darker_gray"
-            android:background="@android:color/transparent" />
-
+            android:textColor="#80FFFFFF"
+            android:textStyle="bold" />
+            
     </LinearLayout>
-
+    
+    <!-- Validation Message -->
     <TextView
         android:id="@+id/tv_validation_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
         android:textSize="12sp"
         android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
         android:visibility="gone" />
 
-    <EditText
-        android:id="@+id/et_card_holder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Card Holder Name" />
-
-    <EditText
-        android:id="@+id/et_bank_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Bank Name (Optional)" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Expiry Date"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/white"
-        android:layout_marginBottom="8dp" />
-
+    <!-- Card Holder Field -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
+        android:background="@drawable/dark_glassmorphism_field"
+        android:padding="16dp"
         android:layout_marginBottom="16dp">
-
-        <Spinner
-            android:id="@+id/spinner_month"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp" />
-
-        <Spinner
-            android:id="@+id/spinner_year"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp" />
-
-    </LinearLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:hint="CVV"
-        app:passwordToggleEnabled="true"
-        app:passwordToggleDrawable="@drawable/ic_visibility_selector">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_cvv"
+        
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberPassword"
-            android:maxLength="4" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <EditText
-        android:id="@+id/et_notes"
+            android:text="Card Holder Name"
+            android:textSize="12sp"
+            android:textColor="#80FFFFFF"
+            android:layout_marginBottom="4dp" />
+            
+        <EditText
+            android:id="@+id/et_card_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:textColorHint="#60FFFFFF"
+            android:background="@android:color/transparent"
+            android:inputType="textPersonName"
+            android:hint="Enter cardholder name" />
+            
+    </LinearLayout>
+    
+    <!-- Bank Name Field -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Notes (Optional)"
-        android:inputType="textMultiLine"
-        android:maxLines="4"
-        android:maxLength="1000"
-        android:gravity="top|start" />
+        android:orientation="vertical"
+        android:background="@drawable/dark_glassmorphism_field"
+        android:padding="16dp"
+        android:layout_marginBottom="32dp">
+        
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bank Name (Optional)"
+            android:textSize="12sp"
+            android:textColor="#80FFFFFF"
+            android:layout_marginBottom="4dp" />
+            
+        <EditText
+            android:id="@+id/et_bank_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:textColorHint="#60FFFFFF"
+            android:background="@android:color/transparent"
+            android:inputType="text"
+            android:hint="Enter bank name" />
+            
+    </LinearLayout>
 
+    <!-- Expiry Date Section -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="EXPIRY DATE"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="#80FFFFFF"
+        android:letterSpacing="0.1"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Expiry Field -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/dark_glassmorphism_field"
+        android:padding="16dp"
+        android:layout_marginBottom="32dp">
+        
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Expiry"
+            android:textSize="12sp"
+            android:textColor="#80FFFFFF"
+            android:layout_marginBottom="4dp" />
+            
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            
+            <Spinner
+                android:id="@+id/spinner_month"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent" />
+                
+            <Spinner
+                android:id="@+id/spinner_year"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent" />
+                
+        </LinearLayout>
+            
+    </LinearLayout>
+    
+    <!-- Security Section -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SECURITY"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="#80FFFFFF"
+        android:letterSpacing="0.1"
+        android:layout_marginBottom="16dp" />
+
+    <!-- CVV Field -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/dark_glassmorphism_field"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp">
+        
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CVV"
+            android:textSize="12sp"
+            android:textColor="#80FFFFFF"
+            android:layout_marginBottom="4dp" />
+            
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            
+            <EditText
+                android:id="@+id/et_cvv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:textColorHint="#60FFFFFF"
+                android:background="@android:color/transparent"
+                android:inputType="numberPassword"
+                android:maxLength="4"
+                android:hint="Enter CVV" />
+                
+            <ImageView
+                android:id="@+id/cvv_visibility_toggle"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_visibility_off"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true" />
+                
+        </LinearLayout>
+            
+    </LinearLayout>
+    
+    <!-- Notes Field -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/dark_glassmorphism_field"
+        android:padding="16dp"
+        android:layout_marginBottom="32dp">
+        
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Notes (Optional)"
+            android:textSize="12sp"
+            android:textColor="#80FFFFFF"
+            android:layout_marginBottom="4dp" />
+            
+        <EditText
+            android:id="@+id/et_notes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:textColorHint="#60FFFFFF"
+            android:background="@android:color/transparent"
+            android:inputType="textMultiLine"
+            android:maxLines="4"
+            android:maxLength="1000"
+            android:gravity="top|start"
+            android:hint="Enter notes" />
+            
+    </LinearLayout>
+
+    <!-- Action Button -->
     <Button
         android:id="@+id/btn_save_card"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:text="Save Credit Card"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="32dp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:background="@drawable/dark_glassmorphism_field" />
 
 </LinearLayout>
+
+</ScrollView>

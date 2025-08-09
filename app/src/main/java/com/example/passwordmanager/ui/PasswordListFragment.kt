@@ -21,6 +21,8 @@ import com.example.passwordmanager.data.PasswordRepository
 import com.example.passwordmanager.databinding.FragmentPasswordListBinding
 import com.example.passwordmanager.model.PasswordEntry
 import com.example.passwordmanager.util.CardColorUtil
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class PasswordListFragment : Fragment() {
 
@@ -46,14 +48,17 @@ class PasswordListFragment : Fragment() {
         loadPasswords()
 
         binding.addPasswordButton.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_addPasswordFragment)
+            // Navigate from parent fragment's NavController
+            requireParentFragment().findNavController().navigate(R.id.action_mainFragment_to_addPasswordFragment)
         }
     }
 
     private fun loadPasswords() {
         val passwords: List<PasswordEntry> = passwordRepository.getAllPasswords()
         passwordAdapter = PasswordAdapter(passwords)
+        binding.passwordRecyclerView.adapter = null
         binding.passwordRecyclerView.adapter = passwordAdapter
+        passwordAdapter.notifyDataSetChanged()
     }
 
     inner class PasswordAdapter(private val passwords: List<PasswordEntry>) :
@@ -61,7 +66,7 @@ class PasswordListFragment : Fragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PasswordViewHolder {
             val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_password, parent, false)
+                .inflate(R.layout.password_card_preview, parent, false)
             return PasswordViewHolder(view)
         }
 
@@ -73,73 +78,38 @@ class PasswordListFragment : Fragment() {
         override fun getItemCount(): Int = passwords.size
 
         inner class PasswordViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            private val iconImage: ImageView = itemView.findViewById(R.id.icon_image)
-            private val titleText: TextView = itemView.findViewById(R.id.title_text)
-            private val subtitleText: TextView = itemView.findViewById(R.id.subtitle_text)
-            private val usernameText: TextView = itemView.findViewById(R.id.username_text)
-            private val passwordText: TextView = itemView.findViewById(R.id.password_text)
-            private val copyUsernameButton: ImageButton =
-                itemView.findViewById(R.id.btn_copy_username)
-            private val copyPasswordButton: ImageButton =
-                itemView.findViewById(R.id.btn_copy_password)
-            private val togglePasswordButton: ImageButton =
-                itemView.findViewById(R.id.btn_toggle_password)
-
-            private var isPasswordVisible = false
-            private var currentPassword = ""
+            private val contextText: TextView? = itemView.findViewById(R.id.context_text)
+            private val appNameText: TextView? = itemView.findViewById(R.id.app_name_text)
+            private val usernameText: TextView? = itemView.findViewById(R.id.username_text)
+            private val passwordText: TextView? = itemView.findViewById(R.id.password_text)
+            private val expiryText: TextView? = itemView.findViewById(R.id.expiry_text)
 
             fun bind(passwordEntry: PasswordEntry, position: Int) {
-                itemView.background = CardColorUtil.getCardGradient(itemView.context, position)
-                titleText.text = toCamelCase(passwordEntry.context)
-                subtitleText.text = toCamelCase(passwordEntry.notes)
-                usernameText.text = passwordEntry.username
-                currentPassword = passwordEntry.password
-                updatePasswordDisplay()
-
-                copyUsernameButton.setOnClickListener {
-                    copyToClipboard(passwordEntry.username)
-                }
-
-                copyPasswordButton.setOnClickListener {
-                    copyToClipboard(currentPassword)
-                }
-
-                togglePasswordButton.setOnClickListener {
-                    isPasswordVisible = !isPasswordVisible
-                    updatePasswordDisplay()
-                }
+                val backgroundRes = CardColorUtil.getGlassmorphismCardBackground(itemView.context, position)
+                itemView.setBackgroundResource(backgroundRes)
+                
+                // Debug: Check if views are found
+                android.util.Log.d("PasswordCard", "Views found: context=${contextText != null}, app=${appNameText != null}, user=${usernameText != null}, pass=${passwordText != null}, exp=${expiryText != null}")
+                
+                contextText?.text = passwordEntry.context
+                appNameText?.text = "${passwordEntry.context} App"
+                usernameText?.text = if (passwordEntry.username.isNotEmpty()) passwordEntry.username else "test@email.com"
+                passwordText?.text = "•".repeat(8)
+                
+                // Format expiry date
+                expiryText?.text = "12/25"
 
                 itemView.setOnClickListener {
                     val bundle = Bundle()
                     bundle.putParcelable("passwordEntry", passwordEntry)
-                    findNavController().navigate(
+                    requireParentFragment().findNavController().navigate(
                         R.id.action_mainFragment_to_editPasswordFragment,
                         bundle
                     )
                 }
             }
 
-            private fun updatePasswordDisplay() {
-                if (isPasswordVisible) {
-                    passwordText.text = currentPassword
-                    togglePasswordButton.setImageResource(R.drawable.ic_visibility)
-                } else {
-                    passwordText.text = "••••••••••"
-                    togglePasswordButton.setImageResource(R.drawable.ic_visibility_off)
-                }
-            }
 
-            private fun copyToClipboard(text: String) {
-                val clipboard =
-                    itemView.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("password", text)
-                clipboard.setPrimaryClip(clip)
-                Toast.makeText(itemView.context, "Copied to clipboard", Toast.LENGTH_SHORT).show()
-            }
-
-            private fun toCamelCase(text: String): String {
-                return text.split(" ").joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } }
-            }
         }
     }
 

@@ -48,8 +48,8 @@ class EditCreditCardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        // Set metallic gradient background to match main page
-        binding.root.setBackgroundResource(R.drawable.metallic_black_gradient)
+        // Set blurred background to match main page
+        binding.root.setBackgroundResource(R.drawable.blurred_background)
 
         // Get credit card entry from arguments
         arguments?.let { args ->
@@ -73,6 +73,16 @@ class EditCreditCardFragment : Fragment() {
         binding.btnDeleteCard.setOnClickListener {
             deleteCreditCard()
         }
+        
+        // Setup CVV visibility toggle
+        binding.cvvVisibilityToggle.setOnClickListener {
+            toggleCvvVisibility()
+        }
+        
+        // Setup back button
+        binding.btnBack.setOnClickListener {
+            requireParentFragment().findNavController().navigateUp()
+        }
     }
 
     private val currentYear = LocalDate.now().year
@@ -92,9 +102,17 @@ class EditCreditCardFragment : Fragment() {
             // Create a hidden CVV view reference (not displayed on card)
             previewCvv = TextView(requireContext())
             
-            // Apply gradient background using card's position in list
+            // Apply glassmorphism background using card's position in list
             val cardPosition = getCardPosition()
-            cardPreviewRoot.background = CardColorUtil.getCardGradient(requireContext(), cardPosition)
+            val backgroundRes = CardColorUtil.getGlassmorphismCardBackground(requireContext(), cardPosition)
+            cardPreviewRoot.setBackgroundResource(backgroundRes)
+            
+            // Start shimmer animation on chip
+            val shimmerOverlay = cardPreviewRoot.findViewById<View>(R.id.shimmer_overlay)
+            shimmerOverlay?.let { overlay ->
+                val drawable = overlay.background as? android.graphics.drawable.AnimationDrawable
+                drawable?.start()
+            }
         } catch (e: Exception) {
             // Handle case where card preview is not available
             e.printStackTrace()
@@ -159,7 +177,7 @@ class EditCreditCardFragment : Fragment() {
             
             // Update bank name
             if (::previewBankName.isInitialized) {
-                previewBankName.text = if (bankName.isNotEmpty()) bankName else "Bank Name"
+                previewBankName.text = if (bankName.isNotEmpty()) formatBankName(bankName) else "Bank Name"
             }
             
             // Update card number
@@ -239,13 +257,13 @@ class EditCreditCardFragment : Fragment() {
         for (i in 0..20) {
             years.add((currentYear + i).toString())
         }
-        val yearAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, years)
-        yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val yearAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_white, years)
+        yearAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_white)
         binding.spinnerYear.adapter = yearAdapter
 
         // Create dynamic month adapter
-        val monthAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, allMonths)
-        monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val monthAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_white, allMonths)
+        monthAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_white)
         binding.spinnerMonth.adapter = monthAdapter
 
         // Add listener to year spinner to dynamically filter months
@@ -275,8 +293,8 @@ class EditCreditCardFragment : Fragment() {
                 if (selectedYear == currentYear) {
                     // For current year, show only months from current month onwards
                     val validMonths = allMonths.slice(currentMonth until allMonths.size).toTypedArray()
-                    val newMonthAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, validMonths)
-                    newMonthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    val newMonthAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_white, validMonths)
+                    newMonthAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_white)
                     binding.spinnerMonth.adapter = newMonthAdapter
                     
                     // Try to preserve the current selection if it's valid for current year
@@ -289,8 +307,8 @@ class EditCreditCardFragment : Fragment() {
                     }
                 } else {
                     // For future years, show all months
-                    val newMonthAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, allMonths)
-                    newMonthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    val newMonthAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_white, allMonths)
+                    newMonthAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_white)
                     binding.spinnerMonth.adapter = newMonthAdapter
                     
                     // Try to preserve the current selection
@@ -461,6 +479,35 @@ class EditCreditCardFragment : Fragment() {
         passwordRepository.deleteCreditCard(creditCardEntry.id)
         Toast.makeText(requireContext(), "Credit card deleted successfully", Toast.LENGTH_SHORT).show()
         findNavController().navigateUp()
+    }
+
+    private fun toggleCvvVisibility() {
+        val cvvField = binding.etCvv
+        val toggleIcon = binding.cvvVisibilityToggle
+        
+        if (cvvField.inputType == android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_PASSWORD) {
+            // Show CVV
+            cvvField.inputType = android.text.InputType.TYPE_CLASS_NUMBER
+            toggleIcon.setImageResource(R.drawable.ic_visibility)
+        } else {
+            // Hide CVV
+            cvvField.inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_PASSWORD
+            toggleIcon.setImageResource(R.drawable.ic_visibility_off)
+        }
+        
+        // Move cursor to end
+        cvvField.setSelection(cvvField.text?.length ?: 0)
+    }
+
+    private fun formatBankName(bankName: String): String {
+        // If all caps, keep as is
+        if (bankName == bankName.uppercase()) {
+            return bankName
+        }
+        // Otherwise convert to camel case
+        return bankName.split(" ").joinToString(" ") { word ->
+            word.lowercase().replaceFirstChar { it.uppercase() }
+        }
     }
 
     override fun onDestroyView() {

@@ -28,9 +28,11 @@ A secure Android application for managing passwords and credit card information 
 - **Local Storage**: Data encrypted in SharedPreferences with Gson serialization
 - **Card Number Masking**: Privacy protection for credit cards in lists
 - **CVV Protection**: Masked CVV input with visibility toggle
+- **Password Masking**: Dynamic password masking with bullets matching actual length
 - **Input Validation**: Comprehensive validation for all forms
 - **Unique ID Generation**: UUID-based unique identifiers for all entries
 - **Data Integrity**: Graceful handling of missing fields in existing data
+- **Dark Theme Security**: Proper dropdown backgrounds prevent information leakage
 
 ### 🎨 User Interface
 - **Material Design**: Modern Material Design components throughout
@@ -46,9 +48,10 @@ A secure Android application for managing passwords and credit card information 
 - **Custom Header**: The main screen has a custom header with the app title and subtitle.
 - **Exit Button**: An exit button has been added to the header to close the app.
 - **Auto-Logout**: The app will automatically log out after 2 minutes of inactivity for enhanced security.
-- **Dull Metallic Gradients**: The card gradients have been updated to a "dull to dark" metallic look.
-- **Improved Password Card Layout**: The password cards have been redesigned to match the credit card layout, with larger fonts and better spacing.
-- **New Copy Icon**: The copy icon has been updated to a more modern design.
+- **Glassmorphism Design**: Modern glassmorphism card backgrounds with rotating gradient colors.
+- **Enhanced Password Cards**: Redesigned password cards with proper vertical spacing, labels, and masked password display.
+- **Unified Card Layout**: Password list and preview cards now use identical layouts for consistency.
+- **Dark Theme Optimization**: Proper dropdown backgrounds and text contrast for dark theme.
 - **Theme Support**: Light and dark theme compatibility with proper text contrast.
 
 ## 🚀 Getting Started
@@ -276,12 +279,15 @@ adb shell am start -n com.example.passwordmanager/.ui.LoginActivity
 
 ## 🎨 UI/UX Improvements
 
-### Latest Visual Updates (v2.1)
-- **Real-time Card Preview**: Added live preview functionality to credit card add/edit screens
-- **Perfect Color Matching**: Card previews now use the exact same gradient colors as their position in the main list
-- **Consistent Background**: All screens now use the same metallic gradient background for visual unity
-- **Enhanced Accessibility**: White text and proper contrast ratios for better readability on dark backgrounds
-- **Seamless Experience**: Visual consistency between list view and edit screens for intuitive user experience
+### Latest Visual Updates (v2.2)
+- **Enhanced Password Cards**: Complete redesign with proper vertical spacing and content structure
+- **Unified Card Layout**: Password list and preview cards now use identical layouts for perfect consistency
+- **Real-time Password Preview**: Live preview functionality for password add/edit screens with masked display
+- **Improved Typography**: Optimized font sizes and spacing for better readability across all card types
+- **Dark Theme Optimization**: Fixed dropdown backgrounds and text contrast for seamless dark theme experience
+- **Perfect Color Matching**: Card previews use exact gradient colors matching their position in lists
+- **Glassmorphism Design**: Modern frosted glass effect with rotating gradient backgrounds
+- **Enhanced Accessibility**: Proper contrast ratios and readable text on all backgrounds
 
 ### Credit Card Design
 - **Rounded Corners**: 20dp corner radius for modern appearance
@@ -330,6 +336,10 @@ adb shell am start -n com.example.passwordmanager/.ui.LoginActivity
 - [x] **Color Synchronization**: Card previews match exact gradient colors from list position
 - [x] **Consistent Background**: Metallic gradient background across all screens for visual unity
 - [x] **Accessibility**: White text on dark backgrounds for proper contrast and readability
+- [x] **Enhanced Password Cards**: Redesigned with proper spacing, labels, and masked password display
+- [x] **Unified Card System**: Single layout used for both password list and preview screens
+- [x] **Dark Theme Dropdowns**: Fixed spinner backgrounds for proper dark theme integration
+- [x] **Typography Optimization**: Improved font sizes and spacing across all card elements
 
 ### 🔄 Future Enhancements
 - [ ] Biometric authentication

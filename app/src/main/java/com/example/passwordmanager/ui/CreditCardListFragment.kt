@@ -43,7 +43,8 @@ class CreditCardListFragment : Fragment() {
         
         // Set up navigation buttons
         binding.addCreditCardButton.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_addCreditCardFragment)
+            // Navigate from parent fragment's NavController
+            requireParentFragment().findNavController().navigate(R.id.action_mainFragment_to_addCreditCardFragment)
         }
     }
 
@@ -87,11 +88,20 @@ class CreditCardListFragment : Fragment() {
             private val expiryDateText: TextView = itemView.findViewById(R.id.expiry_date_text)
             private val cardTitleText: TextView = itemView.findViewById(R.id.card_title)
             private val bankNameText: TextView = itemView.findViewById(R.id.bank_name_text)
+            private val shimmerOverlay: View? = itemView.findViewById(R.id.shimmer_overlay)
+            
+            private fun startShimmerAnimation() {
+                shimmerOverlay?.let { overlay ->
+                    val drawable = overlay.background as? android.graphics.drawable.AnimationDrawable
+                    drawable?.start()
+                }
+            }
 
             fun bind(creditCardEntry: CreditCardEntry, position: Int) {
-                val frameLayout = itemView as FrameLayout
-                frameLayout.background = CardColorUtil.getCardGradient(itemView.context, position)
-                frameLayout.foreground = ContextCompat.getDrawable(itemView.context, R.drawable.card_clipper)
+                // Apply colored glassmorphism background
+                val backgroundRes = CardColorUtil.getGlassmorphismCardBackground(itemView.context, position)
+                itemView.setBackgroundResource(backgroundRes)
+                startShimmerAnimation()
                 cardHolderText.text = creditCardEntry.cardHolder.uppercase()
                 cardNumberText.text = maskCardNumber(creditCardEntry.cardNumber)
                 expiryDateText.text = formatExpiryDate(creditCardEntry.expiryDate)
@@ -101,7 +111,7 @@ class CreditCardListFragment : Fragment() {
                     cardTitleText.text = "CREDIT CARD"
                 }
                 if (creditCardEntry.bankName.isNotEmpty()) {
-                    bankNameText.text = creditCardEntry.bankName
+                    bankNameText.text = formatBankName(creditCardEntry.bankName)
                     bankNameText.visibility = View.VISIBLE
                 } else {
                     bankNameText.visibility = View.GONE
@@ -111,7 +121,7 @@ class CreditCardListFragment : Fragment() {
                 itemView.setOnClickListener {
                     val bundle = Bundle()
                     bundle.putParcelable("creditCardEntry", creditCardEntry)
-                    findNavController().navigate(R.id.action_mainFragment_to_editCreditCardFragment, bundle)
+                    requireParentFragment().findNavController().navigate(R.id.action_mainFragment_to_editCreditCardFragment, bundle)
                 }
             }
 
@@ -127,6 +137,17 @@ class CreditCardListFragment : Fragment() {
             private fun maskCardNumber(cardNumber: String): String {
                 if (cardNumber.length != 16) return "**** **** **** ****"
                 return "${cardNumber.substring(0, 4)} ${cardNumber.substring(4, 8)} ${cardNumber.substring(8, 12)} ${cardNumber.substring(12, 16)}"
+            }
+            
+            private fun formatBankName(bankName: String): String {
+                // If all caps, keep as is
+                if (bankName == bankName.uppercase()) {
+                    return bankName
+                }
+                // Otherwise convert to camel case
+                return bankName.split(" ").joinToString(" ") { word ->
+                    word.lowercase().replaceFirstChar { it.uppercase() }
+                }
             }
         }
     }

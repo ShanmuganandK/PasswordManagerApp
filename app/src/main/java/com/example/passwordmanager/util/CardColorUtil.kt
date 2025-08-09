@@ -7,6 +7,19 @@ import com.example.passwordmanager.R
 
 object CardColorUtil {
 
+    fun getGlassmorphismCardBackground(context: Context, position: Int): Int {
+        val backgrounds = arrayOf(
+            R.drawable.glassmorphism_card_teal,
+            R.drawable.glassmorphism_card_blue, 
+            R.drawable.glassmorphism_card_red,
+            R.drawable.glassmorphism_card_gunmetal,
+            R.drawable.glassmorphism_card_amber,
+            R.drawable.glassmorphism_card_indigo,
+            R.drawable.glassmorphism_card_onyx
+        )
+        return backgrounds[position % backgrounds.size]
+    }
+
     fun getCardGradient(context: Context, position: Int): GradientDrawable {
         val gradients = context.resources.obtainTypedArray(R.array.card_gradient_colors)
         val gradientIndex = position % gradients.length()
