@@ -82,15 +82,13 @@ class AddPasswordFragment : Fragment() {
         for (i in 0..20) {
             years.add((currentYear + i).toString())
         }
-        val yearAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_white, years)
-        yearAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_white)
-        binding.spinnerYear.setPopupBackgroundResource(R.drawable.spinner_popup_background)
+        val yearAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_dark, years)
+        yearAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_dark)
         binding.spinnerYear.adapter = yearAdapter
 
         // Create dynamic month adapter
-        val monthAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_white, allMonths)
-        monthAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_white)
-        binding.spinnerMonth.setPopupBackgroundResource(R.drawable.spinner_popup_background)
+        val monthAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_dark, allMonths)
+        monthAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_dark)
         binding.spinnerMonth.adapter = monthAdapter
 
         // Set current month and year as default (skip "No Expiry")
@@ -108,18 +106,16 @@ class AddPasswordFragment : Fragment() {
                     if (selectedYear == currentYear) {
                         // For current year, show only months from current month onwards (including "No Expiry")
                         val validMonths = arrayOf("No Expiry") + allMonths.slice(currentMonth until allMonths.size).drop(1).toTypedArray()
-                        val newMonthAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_white, validMonths)
-                        newMonthAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_white)
-                        binding.spinnerMonth.setPopupBackgroundResource(R.drawable.spinner_popup_background)
+                        val newMonthAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_dark, validMonths)
+                        newMonthAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_dark)
                         binding.spinnerMonth.adapter = newMonthAdapter
                         
                         // Set to current month (which is now at index 1, after "No Expiry")
                         binding.spinnerMonth.setSelection(1)
                     } else {
                         // For future years, show all months
-                        val newMonthAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_white, allMonths)
-                        newMonthAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_white)
-                        binding.spinnerMonth.setPopupBackgroundResource(R.drawable.spinner_popup_background)
+                        val newMonthAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_dark, allMonths)
+                        newMonthAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_dark)
                         binding.spinnerMonth.adapter = newMonthAdapter
                         
                         // Set to "No Expiry" for future years

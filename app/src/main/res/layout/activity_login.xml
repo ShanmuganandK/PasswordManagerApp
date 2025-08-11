@@ -6,94 +6,105 @@
     android:orientation="vertical"
     android:padding="32dp"
     android:gravity="center"
-    android:background="?android:attr/colorBackground">
+    android:background="@drawable/metallic_black_gradient">
 
-    <!-- App Icon -->
+    <!-- Shield Icon -->
     <ImageView
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@drawable/ic_launcher_foreground"
-        android:layout_marginBottom="32dp"
-        android:contentDescription="App Icon" />
+        android:src="@drawable/shield_icon"
+        android:layout_marginBottom="48dp"
+        android:contentDescription="Security Shield" />
 
-               <!-- Welcome Text -->
-           <TextView
-               android:id="@+id/tv_welcome"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:text="Welcome to Locket"
-               android:textSize="24sp"
-               android:textStyle="bold"
-               android:textColor="?android:attr/textColorPrimary"
-               android:gravity="center"
-               android:layout_marginBottom="8dp" />
-
-           <TextView
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:text="Secure your digital life"
-               android:textSize="16sp"
-               android:textColor="?android:attr/textColorSecondary"
-               android:gravity="center"
-               android:layout_marginBottom="48dp" />
-
-    <!-- Password Input -->
-    <com.google.android.material.textfield.TextInputLayout
+    <!-- Main Title -->
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:hint="Master Password"
-        app:passwordToggleEnabled="true"
-        app:passwordToggleDrawable="@drawable/ic_visibility_selector">
+        android:text="Enter your master\npassword"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
 
-        <com.google.android.material.textfield.TextInputEditText
+    <!-- Subtitle -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Safeguard your sensitive information"
+        android:textSize="16sp"
+        android:textColor="#B0FFFFFF"
+        android:gravity="center"
+        android:layout_marginBottom="64dp" />
+
+    <!-- Password Input -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/dark_glassmorphism_field"
+        android:padding="16dp"
+        android:layout_marginBottom="32dp">
+        
+        <EditText
             android:id="@+id/et_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Master Password"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:textColorHint="#80FFFFFF"
+            android:background="@android:color/transparent"
             android:inputType="textPassword"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:drawableEnd="@drawable/ic_visibility_off"
+            android:drawablePadding="12dp" />
+            
+    </LinearLayout>
 
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <!-- Login Button -->
-    <com.google.android.material.button.MaterialButton
+    <!-- Unlock Button -->
+    <Button
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Unlock"
+        android:layout_height="56dp"
+        android:text="UNLOCK"
         android:textSize="16sp"
-        android:padding="16dp"
-        android:layout_marginBottom="16dp" />
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:background="@drawable/dark_glassmorphism_field"
+        android:layout_marginBottom="64dp" />
 
-    <!-- Biometric Button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_biometric"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Use Biometric"
-        android:textSize="16sp"
-        android:padding="16dp"
-        android:layout_marginBottom="24dp"
-        android:visibility="gone" />
-
-    <!-- Setup Button (for first time users) -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_setup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Set Up Master Password"
-        android:textSize="16sp"
-        android:padding="16dp"
-        style="@style/Widget.Material3.Button.OutlinedButton" />
+    <!-- Fingerprint Icon -->
+    <ImageView
+        android:id="@+id/iv_fingerprint"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/fg"
+        android:layout_marginBottom="48dp"
+        android:contentDescription="Biometric Authentication"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackgroundBorderless" />
 
     <!-- Security Note -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Your master password is stored securely and never shared"
-        android:textSize="12sp"
-        android:textColor="?android:attr/textColorSecondary"
-        android:gravity="center"
-        android:layout_marginTop="32dp" />
+        android:text="Your master password is encrypted\nand protected"
+        android:textSize="14sp"
+        android:textColor="#80FFFFFF"
+        android:gravity="center" />
+
+    <!-- Setup Button (for first time users) -->
+    <Button
+        android:id="@+id/btn_setup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Set Up Master Password"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/dark_glassmorphism_field"
+        android:layout_marginTop="16dp"
+        android:visibility="gone" />
 
 </LinearLayout>

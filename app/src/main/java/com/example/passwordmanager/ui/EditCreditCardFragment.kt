@@ -257,13 +257,13 @@ class EditCreditCardFragment : Fragment() {
         for (i in 0..20) {
             years.add((currentYear + i).toString())
         }
-        val yearAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_white, years)
-        yearAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_white)
+        val yearAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_dark, years)
+        yearAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_dark)
         binding.spinnerYear.adapter = yearAdapter
 
         // Create dynamic month adapter
-        val monthAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_white, allMonths)
-        monthAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_white)
+        val monthAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_dark, allMonths)
+        monthAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_dark)
         binding.spinnerMonth.adapter = monthAdapter
 
         // Add listener to year spinner to dynamically filter months
@@ -293,8 +293,8 @@ class EditCreditCardFragment : Fragment() {
                 if (selectedYear == currentYear) {
                     // For current year, show only months from current month onwards
                     val validMonths = allMonths.slice(currentMonth until allMonths.size).toTypedArray()
-                    val newMonthAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_white, validMonths)
-                    newMonthAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_white)
+                    val newMonthAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_dark, validMonths)
+                    newMonthAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_dark)
                     binding.spinnerMonth.adapter = newMonthAdapter
                     
                     // Try to preserve the current selection if it's valid for current year
@@ -307,8 +307,8 @@ class EditCreditCardFragment : Fragment() {
                     }
                 } else {
                     // For future years, show all months
-                    val newMonthAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_white, allMonths)
-                    newMonthAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_white)
+                    val newMonthAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_dark, allMonths)
+                    newMonthAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_dark)
                     binding.spinnerMonth.adapter = newMonthAdapter
                     
                     // Try to preserve the current selection

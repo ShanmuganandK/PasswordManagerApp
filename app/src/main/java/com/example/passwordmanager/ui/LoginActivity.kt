@@ -34,10 +34,7 @@ class LoginActivity : AppCompatActivity() {
             authenticateUser()
         }
 
-        // Set up biometric button
-        binding.btnBiometric.setOnClickListener {
-            authenticateWithBiometric()
-        }
+
 
         // Set up setup button (for first time users)
         binding.btnSetup.setOnClickListener {
@@ -47,22 +44,27 @@ class LoginActivity : AppCompatActivity() {
         // Check if master password is already set
         if (passwordRepository.isMasterPasswordSet()) {
             binding.btnSetup.visibility = android.view.View.GONE
-            binding.tvWelcome.text = "Enter your master password"
         } else {
             binding.btnLogin.visibility = android.view.View.GONE
-            binding.btnBiometric.visibility = android.view.View.GONE
-            binding.tvWelcome.text = "Welcome to Password Manager"
         }
     }
 
     private fun checkBiometricAvailability() {
+        // Only show biometric option if master password is already set
+        if (!passwordRepository.isMasterPasswordSet()) {
+            binding.ivFingerprint.visibility = android.view.View.GONE
+            return
+        }
+        
         val biometricManager = BiometricManager.from(this)
         when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)) {
             BiometricManager.BIOMETRIC_SUCCESS -> {
-                binding.btnBiometric.visibility = android.view.View.VISIBLE
+                binding.ivFingerprint.setOnClickListener {
+                    authenticateWithBiometric()
+                }
             }
             else -> {
-                binding.btnBiometric.visibility = android.view.View.GONE
+                binding.ivFingerprint.alpha = 0.5f
             }
         }
     }
