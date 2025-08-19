@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Background Circle -->
+    <path
+        android:pathData="M54,54m-50,0a50,50 0,1 1,100 0a50,50 0,1 1,-100 0"
+        android:fillColor="#1A1A2E"/>
+    
+    <!-- Outer Hexagon (Crystal Facets) -->
+    <path
+        android:pathData="M54,20L74,32L74,52L54,64L34,52L34,32Z"
+        android:strokeWidth="2"
+        android:strokeColor="#00D4FF"
+        android:fillColor="#16213E"/>
+    
+    <!-- Inner Hexagon (Lock Body) -->
+    <path
+        android:pathData="M54,28L66,34L66,46L54,52L42,46L42,34Z"
+        android:fillColor="#4ECDC4"/>
+    
+    <!-- Lock Shackle (Top Arc) -->
+    <path
+        android:pathData="M46,34Q46,26 54,26Q62,26 62,34"
+        android:strokeWidth="3"
+        android:strokeColor="#FFD93D"
+        android:fillColor="@android:color/transparent"
+        android:strokeLineCap="round"/>
+    
+    <!-- Keyhole Circle -->
+    <path
+        android:pathData="M54,40m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0"
+        android:fillColor="#1A1A2E"/>
+    
+    <!-- Keyhole Slot -->
+    <path
+        android:pathData="M54,43L54,47"
+        android:strokeWidth="2"
+        android:strokeColor="#1A1A2E"
+        android:strokeLineCap="round"/>
+    
+    <!-- Crystal Highlights -->
+    <path
+        android:pathData="M48,30L54,28L60,30"
+        android:strokeWidth="1"
+        android:strokeColor="#FFFFFF"
+        android:fillAlpha="0.6"/>
+    
+    <path
+        android:pathData="M42,38L48,36"
+        android:strokeWidth="1"
+        android:strokeColor="#FFFFFF"
+        android:fillAlpha="0.4"/>
+    
+    <!-- Glow Effect -->
+    <path
+        android:pathData="M54,40m-25,0a25,25 0,1 1,50 0a25,25 0,1 1,-50 0"
+        android:fillColor="#00D4FF"
+        android:fillAlpha="0.1"/>
+        
+</vector>

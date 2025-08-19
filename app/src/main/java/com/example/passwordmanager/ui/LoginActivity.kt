@@ -9,20 +9,17 @@ import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import com.example.passwordmanager.R
 import com.example.passwordmanager.databinding.ActivityLoginBinding
-import com.example.passwordmanager.data.PasswordRepository
+
 import com.example.passwordmanager.MainActivity
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var passwordRepository: PasswordRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
-        passwordRepository = PasswordRepository(this)
         
         setupUI()
         checkBiometricAvailability()
@@ -34,39 +31,32 @@ class LoginActivity : AppCompatActivity() {
             authenticateUser()
         }
 
-
-
-        // Set up setup button (for first time users)
+        // Set up setup button (for first time users only)
         binding.btnSetup.setOnClickListener {
             startSetupActivity()
         }
+        
 
-        // Check if master password is already set
-        if (passwordRepository.isMasterPasswordSet()) {
+
+        // Check if encryption is set up
+        val secureRepository = com.example.passwordmanager.data.SecurePasswordRepositoryImpl(this)
+        
+        if (secureRepository.isEncryptionSetup()) {
+            // Encryption is set up - show login UI
             binding.btnSetup.visibility = android.view.View.GONE
+            binding.btnLogin.visibility = android.view.View.VISIBLE
         } else {
+            // No encryption setup - show setup UI
             binding.btnLogin.visibility = android.view.View.GONE
+            binding.btnSetup.visibility = android.view.View.VISIBLE
+            binding.btnSetup.text = "Set Up Master Password"
         }
     }
 
     private fun checkBiometricAvailability() {
-        // Only show biometric option if master password is already set
-        if (!passwordRepository.isMasterPasswordSet()) {
-            binding.ivFingerprint.visibility = android.view.View.GONE
-            return
-        }
-        
-        val biometricManager = BiometricManager.from(this)
-        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)) {
-            BiometricManager.BIOMETRIC_SUCCESS -> {
-                binding.ivFingerprint.setOnClickListener {
-                    authenticateWithBiometric()
-                }
-            }
-            else -> {
-                binding.ivFingerprint.alpha = 0.5f
-            }
-        }
+        // Biometric authentication is not supported with encrypted system
+        // The master password is required for decryption
+        binding.ivFingerprint.visibility = android.view.View.GONE
     }
 
     private fun authenticateUser() {
@@ -77,42 +67,40 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        if (passwordRepository.verifyMasterPassword(enteredPassword)) {
-            // Success - proceed to main activity
-            startMainActivity()
-        } else {
-            binding.etPassword.error = "Incorrect master password"
-            binding.etPassword.text?.clear()
+        // Use secure authentication
+        val secureRepository = com.example.passwordmanager.data.SecurePasswordRepositoryImpl(this)
+        val authResult = secureRepository.authenticateUser(enteredPassword)
+        
+        when (authResult) {
+            is com.example.passwordmanager.crypto.AuthResult.Success -> {
+                // Set master key in session manager
+                val masterKey = secureRepository.deriveKeyFromPassword(enteredPassword)
+                if (masterKey != null) {
+                    val sessionManager = com.example.passwordmanager.security.SessionManager.getInstance(this)
+                    sessionManager.setMasterKey(masterKey)
+                }
+                startMainActivity()
+            }
+            is com.example.passwordmanager.crypto.AuthResult.InvalidPassword -> {
+                binding.etPassword.error = "Invalid master password"
+                binding.etPassword.text?.clear()
+            }
+            is com.example.passwordmanager.crypto.AuthResult.DataCorrupted -> {
+                binding.etPassword.error = "Data corruption detected. Please reset the app."
+                binding.etPassword.text?.clear()
+            }
+            is com.example.passwordmanager.crypto.AuthResult.SetupRequired -> {
+                // This shouldn't happen in login, but handle it
+                startSetupActivity()
+            }
+            is com.example.passwordmanager.crypto.AuthResult.Error -> {
+                binding.etPassword.error = authResult.message
+                binding.etPassword.text?.clear()
+            }
         }
     }
 
-    private fun authenticateWithBiometric() {
-        val executor = ContextCompat.getMainExecutor(this)
-        val biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                super.onAuthenticationSucceeded(result)
-                startMainActivity()
-            }
 
-            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                super.onAuthenticationError(errorCode, errString)
-                Toast.makeText(this@LoginActivity, "Biometric authentication failed", Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onAuthenticationFailed() {
-                super.onAuthenticationFailed()
-                Toast.makeText(this@LoginActivity, "Authentication failed", Toast.LENGTH_SHORT).show()
-            }
-        })
-
-        val promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Biometric Authentication")
-            .setSubtitle("Use your biometric to access Password Manager")
-            .setNegativeButtonText("Use Password")
-            .build()
-
-        biometricPrompt.authenticate(promptInfo)
-    }
 
     private fun startSetupActivity() {
         val intent = Intent(this, SetupMasterPasswordActivity::class.java)
@@ -120,15 +108,21 @@ class LoginActivity : AppCompatActivity() {
         finish()
     }
 
+
+
     private fun startMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
     }
 
+
+
     override fun onResume() {
         super.onResume()
         // Clear password field when returning to login
         binding.etPassword.text?.clear()
+        // Refresh UI in case migration status changed
+        setupUI()
     }
 } 

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    
+    <!-- Background -->
+    <path
+        android:pathData="M0,0h48v48h-48z"
+        android:fillColor="#1A1A2E"/>
+    
+    <!-- Main Logo -->
+    <group android:translateX="24" android:translateY="24">
+        
+        <!-- Outer Glow -->
+        <path
+            android:pathData="M0,-15L13,-7.5L13,7.5L0,15L-13,7.5L-13,-7.5Z"
+            android:fillColor="#00D4FF"
+            android:fillAlpha="0.3"/>
+        
+        <!-- Main Hexagon Body -->
+        <path
+            android:pathData="M0,-12L10.4,-6L10.4,6L0,12L-10.4,6L-10.4,-6Z"
+            android:fillColor="#4ECDC4"/>
+        
+        <!-- Lock Shackle -->
+        <path
+            android:pathData="M-4,-6Q-4,-10 0,-10Q4,-10 4,-6"
+            android:strokeWidth="2"
+            android:strokeColor="#FFD93D"
+            android:fillColor="@android:color/transparent"
+            android:strokeLineCap="round"/>
+        
+        <!-- Keyhole -->
+        <path
+            android:pathData="M0,-2m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0"
+            android:fillColor="#1A1A2E"/>
+        
+        <path
+            android:pathData="M0,0L0,3"
+            android:strokeWidth="2"
+            android:strokeColor="#1A1A2E"
+            android:strokeLineCap="round"/>
+        
+        <!-- Border -->
+        <path
+            android:pathData="M0,-12L10.4,-6L10.4,6L0,12L-10.4,6L-10.4,-6Z"
+            android:strokeWidth="1"
+            android:strokeColor="#00D4FF"
+            android:fillColor="@android:color/transparent"/>
+            
+    </group>
+    
+</vector>

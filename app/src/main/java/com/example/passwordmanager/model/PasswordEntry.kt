@@ -10,5 +10,7 @@ data class PasswordEntry(
     val password: String,
     val expiryDate: String = "",
     val notes: String = "",
-    val id: String = ""
+    val id: String = "",
+    val createdAt: Long = System.currentTimeMillis(),
+    val updatedAt: Long = System.currentTimeMillis()
 ) : Parcelable

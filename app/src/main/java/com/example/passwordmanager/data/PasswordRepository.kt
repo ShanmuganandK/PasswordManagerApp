@@ -17,7 +17,7 @@ import java.security.MessageDigest
 
 class PasswordRepository(context: Context) {
 
-    private val sharedPreferences: SharedPreferences = context.getSharedPreferences("PasswordManager", Context.MODE_PRIVATE)
+    private val sharedPreferences: SharedPreferences = context.getSharedPreferences("MaureanManager", Context.MODE_PRIVATE)
     private val gson = GsonBuilder()
         .registerTypeAdapter(PasswordEntry::class.java, PasswordEntryDeserializer())
         .registerTypeAdapter(CreditCardEntry::class.java, CreditCardEntryDeserializer())

@@ -8,16 +8,17 @@
     android:gravity="center"
     android:background="@drawable/metallic_black_gradient">
 
-    <!-- Shield Icon -->
+    <!-- Maurean Manager Logo -->
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/shield_icon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_maurean_logo"
         android:layout_marginBottom="48dp"
-        android:contentDescription="Security Shield" />
+        android:contentDescription="Maurean Manager Logo" />
 
     <!-- Main Title -->
     <TextView
+        android:id="@+id/tv_main_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Enter your master\npassword"
@@ -29,6 +30,7 @@
 
     <!-- Subtitle -->
     <TextView
+        android:id="@+id/tv_subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Safeguard your sensitive information"
@@ -99,12 +101,13 @@
     <Button
         android:id="@+id/btn_setup"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:text="Set Up Master Password"
         android:textSize="16sp"
+        android:textStyle="bold"
         android:textColor="@android:color/white"
         android:background="@drawable/dark_glassmorphism_field"
         android:layout_marginTop="16dp"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
 </LinearLayout>
