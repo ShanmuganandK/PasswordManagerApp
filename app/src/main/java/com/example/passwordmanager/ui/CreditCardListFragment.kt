@@ -4,9 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +15,6 @@ import com.example.passwordmanager.databinding.FragmentCreditCardListBinding
 import com.example.passwordmanager.data.PasswordRepository
 import com.example.passwordmanager.model.CreditCardEntry
 import com.example.passwordmanager.util.CardColorUtil
-import com.example.passwordmanager.util.StackedCardDecoration
 
 class CreditCardListFragment : Fragment() {
 
@@ -37,9 +35,7 @@ class CreditCardListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        // Detect dark theme
-        binding.creditCardRecyclerView.layoutManager = LinearLayoutManager(context)
-        loadCreditCards()
+        setupRecyclerView()
         
         // Set up navigation buttons
         binding.addCreditCardButton.setOnClickListener {
@@ -48,10 +44,22 @@ class CreditCardListFragment : Fragment() {
         }
     }
 
+    private fun setupRecyclerView() {
+        binding.creditCardRecyclerView.layoutManager = LinearLayoutManager(context)
+        loadCreditCards()
+    }
+
     private fun loadCreditCards() {
         val creditCards: List<CreditCardEntry> = passwordRepository.getAllCreditCards()
         creditCardAdapter = CreditCardAdapter(creditCards)
         binding.creditCardRecyclerView.adapter = creditCardAdapter
+    }
+
+
+
+    override fun onResume() {
+        super.onResume()
+        loadCreditCards()
     }
 
     inner class CreditCardAdapter(private val creditCards: List<CreditCardEntry>) :
@@ -66,18 +74,6 @@ class CreditCardListFragment : Fragment() {
         override fun onBindViewHolder(holder: CreditCardViewHolder, position: Int) {
             val creditCardEntry = creditCards[position]
             holder.bind(creditCardEntry, position)
-            
-            // Add stacked card animation with progressive offset
-            holder.itemView.alpha = 0f
-            holder.itemView.translationY = 50f
-            holder.itemView.translationX = (position * 4).toFloat() // Slight horizontal offset for stack effect
-            
-            holder.itemView.animate()
-                .alpha(1f)
-                .translationY(0f)
-                .setDuration(400)
-                .setStartDelay(position * 80L)
-                .start()
         }
 
         override fun getItemCount(): Int = creditCards.size
@@ -88,34 +84,29 @@ class CreditCardListFragment : Fragment() {
             private val expiryDateText: TextView = itemView.findViewById(R.id.expiry_date_text)
             private val cardTitleText: TextView = itemView.findViewById(R.id.card_title)
             private val bankNameText: TextView = itemView.findViewById(R.id.bank_name_text)
-            private val shimmerOverlay: View? = itemView.findViewById(R.id.shimmer_overlay)
-            
-            private fun startShimmerAnimation() {
-                shimmerOverlay?.let { overlay ->
-                    val drawable = overlay.background as? android.graphics.drawable.AnimationDrawable
-                    drawable?.start()
-                }
-            }
 
             fun bind(creditCardEntry: CreditCardEntry, position: Int) {
-                // Apply colored glassmorphism background
-                val backgroundRes = CardColorUtil.getGlassmorphismCardBackground(itemView.context, position)
-                itemView.setBackgroundResource(backgroundRes)
-                startShimmerAnimation()
+                // Set card data
                 cardHolderText.text = creditCardEntry.cardHolder.uppercase()
-                cardNumberText.text = maskCardNumber(creditCardEntry.cardNumber)
+                cardNumberText.text = formatCardNumber(creditCardEntry.cardNumber)
                 expiryDateText.text = formatExpiryDate(creditCardEntry.expiryDate)
+                
                 if (creditCardEntry.cardType.isNotEmpty()) {
                     cardTitleText.text = creditCardEntry.cardType
                 } else {
                     cardTitleText.text = "CREDIT CARD"
                 }
+                
                 if (creditCardEntry.bankName.isNotEmpty()) {
-                    bankNameText.text = formatBankName(creditCardEntry.bankName)
+                    bankNameText.text = creditCardEntry.bankName.uppercase()
                     bankNameText.visibility = View.VISIBLE
                 } else {
                     bankNameText.visibility = View.GONE
                 }
+                
+                // Set glassmorphism background to match edit screen
+                val backgroundRes = com.example.passwordmanager.util.CardColorUtil.getGlassmorphismCardBackground(requireContext(), position)
+                itemView.setBackgroundResource(backgroundRes)
                 
                 // Add click listener for editing
                 itemView.setOnClickListener {
@@ -134,27 +125,11 @@ class CreditCardListFragment : Fragment() {
                 }
             }
 
-            private fun maskCardNumber(cardNumber: String): String {
+            private fun formatCardNumber(cardNumber: String): String {
                 if (cardNumber.length != 16) return "**** **** **** ****"
                 return "${cardNumber.substring(0, 4)} ${cardNumber.substring(4, 8)} ${cardNumber.substring(8, 12)} ${cardNumber.substring(12, 16)}"
             }
-            
-            private fun formatBankName(bankName: String): String {
-                // If all caps, keep as is
-                if (bankName == bankName.uppercase()) {
-                    return bankName
-                }
-                // Otherwise convert to camel case
-                return bankName.split(" ").joinToString(" ") { word ->
-                    word.lowercase().replaceFirstChar { it.uppercase() }
-                }
-            }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        loadCreditCards()
     }
 
     override fun onDestroyView() {

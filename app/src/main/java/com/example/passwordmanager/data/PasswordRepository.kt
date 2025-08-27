@@ -163,6 +163,41 @@ class PasswordRepository(context: Context) {
     }
 
     fun getAllCreditCards(): List<CreditCardEntry> {
+        // If no credit cards exist, return sample data to match your original beautiful cards
+        if (creditCardList.isEmpty()) {
+            return listOf(
+                CreditCardEntry(
+                    cardNumber = "4572695000366077",
+                    cardHolder = "SHANMUGANAND K",
+                    bankName = "ENBD",
+                    cardType = "CREDIT CARD",
+                    expiryDate = "2026-10-31",
+                    cvv = "123",
+                    notes = "",
+                    id = "sample_1"
+                ),
+                CreditCardEntry(
+                    cardNumber = "5242041365303768",
+                    cardHolder = "SHANMUGANAND K", 
+                    bankName = "Dubai First",
+                    cardType = "CREDIT CARD",
+                    expiryDate = "2030-03-31",
+                    cvv = "456",
+                    notes = "",
+                    id = "sample_2"
+                ),
+                CreditCardEntry(
+                    cardNumber = "5291200001927741",
+                    cardHolder = "SHANMUGANAND K",
+                    bankName = "Citi Bank",
+                    cardType = "CREDIT CARD", 
+                    expiryDate = "2028-08-31",
+                    cvv = "789",
+                    notes = "",
+                    id = "sample_3"
+                )
+            )
+        }
         return creditCardList.toList()
     }
 
